@@ -12,6 +12,8 @@ abstract class MainPageViewModelBase with Store {
   final ScrollController scrollController = ScrollController();
   final String defaultSubredditString = 'all';
 
+  final int _numberOfPostsToFetch = 25;
+
   MainPageViewModelBase({
     this.reddit,
     this.user,
@@ -39,7 +41,7 @@ abstract class MainPageViewModelBase with Store {
 
   Future _getPosts(SubredditRef subredditToFetchFrom) async {
     print('fetching new posts');
-    var subreddit = subredditToFetchFrom.hot();
+    var subreddit = subredditToFetchFrom.hot(after: submissionContent.isNotEmpty ? submissionContent.last.fullname : null, limit: _numberOfPostsToFetch);
     await for (UserContent post in subreddit) {
       Submission submission = post;
       submissionContent.add(submission);
