@@ -51,11 +51,12 @@ class MainPage extends StatelessWidget {
     return Observer(builder: (_) {
       return ListView.builder(
         physics: ScrollPhysics(),
+        shrinkWrap: true,
         controller: viewModel.scrollController,
         itemCount: viewModel.submissionContent.length,
         itemBuilder: (_, index) {
-          return _buildPost(
-              submission: viewModel.submissionContent.elementAt(index));
+          var submissionData = viewModel.submissionContent.elementAt(index);
+          return _buildPost(submission: submissionData);
         },
       );
     });
@@ -67,21 +68,30 @@ class MainPage extends StatelessWidget {
       child: Card(
         color: Colors.black26,
         child: Padding(
-          padding: EdgeInsets.all(5),
-          child: Row(
-            children: <Widget>[
-              submission.isSelf
-                  ? Icon(Icons.arrow_forward_ios)
-                  : Icon(Icons.videocam), // TODO: Display media widget / post instead
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 5),
-                  child: Text(submission.title),
+            padding: EdgeInsets.all(5),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    submission.isSelf
+                        ? Icon(Icons.arrow_forward_ios)
+                        : Icon(Icons
+                            .videocam), // TODO: Display media widget / post instead
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(submission.title),
+                      ),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Text(submission.upvotes.toString()),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            )),
       ),
     );
   }

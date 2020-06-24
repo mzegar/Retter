@@ -40,7 +40,6 @@ abstract class MainPageViewModelBase with Store {
   }
 
   Future _getPosts(SubredditRef subredditToFetchFrom) async {
-    print('fetching new posts');
     var subreddit = subredditToFetchFrom.hot(after: submissionContent.isNotEmpty ? submissionContent.last.fullname : null, limit: _numberOfPostsToFetch);
     await for (UserContent post in subreddit) {
       Submission submission = post;
