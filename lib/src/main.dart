@@ -18,6 +18,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     title: 'Reddit app',
+    theme: ThemeData.dark(),
     home: MainPage(
       viewModel: MainPageViewModel(reddit: reddit, user: currentUser),
     ),
@@ -31,22 +32,53 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Reddit App',
-      theme: ThemeData.dark(),
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.apps),
-            onPressed: () {},
-          ),
-          title: Text(viewModel.currentSubreddit != null
-              ? viewModel.currentSubreddit.displayName
-              : viewModel.defaultSubredditString),
-        ),
-        body: _buildListView(context),
+    return Scaffold(
+      drawer: _buildDrawer(context),
+      appBar: AppBar(
+        title: _buildTitle(),
       ),
+      body: _buildListView(context),
     );
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return Observer(builder: (_) {
+      return Drawer(
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: TextField(
+                onSubmitted: (String enteredText) {
+                  viewModel.changeToSubreddit(enteredText);
+                  Navigator.pop(context);
+                },
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                  ),
+                  hintText: 'Enter a subreddit',
+                ),
+              ),
+            ),
+            ListTile(),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildTitle() {
+    return Observer(builder: (_) {
+      return Text(viewModel.currentSubreddit != null
+          ? viewModel.currentSubreddit.displayName
+          : viewModel.defaultSubredditString);
+    });
   }
 
   Widget _buildListView(BuildContext context) {
@@ -85,7 +117,7 @@ class MainPage extends StatelessWidget {
                           if (submission.isSelf) {
                             viewModel.goToPostPage(context, submission);
                           } else {
-//                            launchURL(context, submission.url.toString());
+                            launchURL(submission.url.toString());
                           }
                         },
                         onLongPress: () {

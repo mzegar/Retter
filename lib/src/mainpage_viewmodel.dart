@@ -41,6 +41,12 @@ abstract class MainPageViewModelBase with Store {
     );
   }
 
+  void changeToSubreddit(String subredditTextField) {
+    submissionContent.clear();
+    currentSubreddit = reddit.subreddit(subredditTextField);
+    _getPosts(currentSubreddit);
+  }
+
   void _initPage() {
     _setDefaultSubreddit();
 
@@ -54,14 +60,21 @@ abstract class MainPageViewModelBase with Store {
   }
 
   Future _getPosts(SubredditRef subredditToFetchFrom) async {
-    var subreddit = subredditToFetchFrom.hot(
-        after: submissionContent.isNotEmpty
-            ? submissionContent.last.fullname
-            : null,
-        limit: _numberOfPostsToFetch);
-    await for (UserContent post in subreddit) {
-      Submission submission = post;
-      submissionContent.add(submission);
+    try{
+      var subreddit = subredditToFetchFrom.hot(
+          after: submissionContent.isNotEmpty
+              ? submissionContent.last.fullname
+              : null,
+          limit: _numberOfPostsToFetch);
+
+      await for (UserContent post in subreddit) {
+        Submission submission = post;
+        submissionContent.add(submission);
+      }
+    }
+    catch(_) {
+      //TODO: handle this!
+      print('failed to load subs');
     }
   }
 

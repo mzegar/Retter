@@ -12,26 +12,21 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Post Page',
-      theme: ThemeData.dark(),
-      home: Scaffold(
-        appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: Text(viewModel.submission.title)),
-        body: ListView(
-          children: <Widget>[
-            _buildPost(context: context, submission: viewModel.submission),
-            if (viewModel.isSelfPost())
-              _buildSelfText(
-                  context: context, submission: viewModel.submission),
-          ],
-        ),
+    Scaffold(
+      appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(viewModel.submission.title)),
+      body: ListView(
+        children: <Widget>[
+          _buildPost(context: context, submission: viewModel.submission),
+          if (viewModel.isSelfPost())
+            _buildSelfText(context: context, submission: viewModel.submission),
+        ],
       ),
     );
   }
@@ -80,7 +75,7 @@ class PostPage extends StatelessWidget {
           child: MarkdownBody(
             data: submission.selftext,
             onTapLink: (String url) {
-//              launchURL(context, url);
+              launchURL(url);
             },
           ),
         ),
