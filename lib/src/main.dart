@@ -2,6 +2,7 @@ import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutterreddit/src/common/LaunchURL.dart';
 
 Future<void> main() async {
   //TODO: Add proper login, don't steal my info
@@ -15,11 +16,12 @@ Future<void> main() async {
 
   Redditor currentUser = await reddit.user.me();
 
-  runApp(
-    MainPage(
+  runApp(MaterialApp(
+    title: 'Reddit app',
+    home: MainPage(
       viewModel: MainPageViewModel(reddit: reddit, user: currentUser),
     ),
-  );
+  ));
 }
 
 class MainPage extends StatelessWidget {
@@ -42,12 +44,12 @@ class MainPage extends StatelessWidget {
               ? viewModel.currentSubreddit.displayName
               : viewModel.defaultSubredditString),
         ),
-        body: _buildListView(),
+        body: _buildListView(context),
       ),
     );
   }
 
-  Widget _buildListView() {
+  Widget _buildListView(BuildContext context) {
     return Observer(builder: (_) {
       return ListView.builder(
         physics: ScrollPhysics(),
@@ -56,13 +58,13 @@ class MainPage extends StatelessWidget {
         itemCount: viewModel.submissionContent.length,
         itemBuilder: (_, index) {
           var submissionData = viewModel.submissionContent.elementAt(index);
-          return _buildPost(submission: submissionData);
+          return _buildPost(context: context, submission: submissionData);
         },
       );
     });
   }
 
-  Widget _buildPost({Submission submission}) {
+  Widget _buildPost({BuildContext context, Submission submission}) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0),
       child: Card(
@@ -78,9 +80,21 @@ class MainPage extends StatelessWidget {
                         : Icon(Icons
                             .videocam), // TODO: Display media widget / post instead
                     Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(submission.title),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (submission.isSelf) {
+                            viewModel.goToPostPage(context, submission);
+                          } else {
+//                            launchURL(context, submission.url.toString());
+                          }
+                        },
+                        onLongPress: () {
+                          print('long press');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(submission.title),
+                        ),
                       ),
                     ),
                     Column(

@@ -1,6 +1,10 @@
 import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterreddit/src/postpage.dart';
+import 'package:flutterreddit/src/postpage_viewmodel.dart';
 import 'package:mobx/mobx.dart';
+import 'package:flutter/foundation.dart';
 
 part 'mainpage_viewmodel.g.dart';
 
@@ -15,8 +19,8 @@ abstract class MainPageViewModelBase with Store {
   final int _numberOfPostsToFetch = 25;
 
   MainPageViewModelBase({
-    this.reddit,
-    this.user,
+    @required this.reddit,
+    @required this.user,
   }) {
     _initPage();
   }
@@ -26,6 +30,16 @@ abstract class MainPageViewModelBase with Store {
 
   @observable
   SubredditRef currentSubreddit;
+
+  void goToPostPage(BuildContext context, Submission submission) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PostPage(
+                viewModel: PostPageViewModel(submission: submission),
+              )),
+    );
+  }
 
   void _initPage() {
     _setDefaultSubreddit();
@@ -40,7 +54,11 @@ abstract class MainPageViewModelBase with Store {
   }
 
   Future _getPosts(SubredditRef subredditToFetchFrom) async {
-    var subreddit = subredditToFetchFrom.hot(after: submissionContent.isNotEmpty ? submissionContent.last.fullname : null, limit: _numberOfPostsToFetch);
+    var subreddit = subredditToFetchFrom.hot(
+        after: submissionContent.isNotEmpty
+            ? submissionContent.last.fullname
+            : null,
+        limit: _numberOfPostsToFetch);
     await for (UserContent post in subreddit) {
       Submission submission = post;
       submissionContent.add(submission);
@@ -49,7 +67,8 @@ abstract class MainPageViewModelBase with Store {
 
   void _initScrollController() {
     scrollController.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         _getPosts(currentSubreddit);
       }
     });
