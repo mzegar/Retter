@@ -10,7 +10,18 @@ IOS/Android Reddit app created with Flutter
     - Select "script"
     - Redirect url: type "http://localhost:8080"
     - Click create app
-- Go to assets/config.json in the repository
+- Create config.json inside of /assets
+    - Copy and paste this into config.json
+    `{
+         "clientId": "PROVIDE_REDDIT_API_INFO",
+         "clientSecret": "PROVIDE_REDDIT_API_INFO",
+         "userAgent": "PROVIDE_REDDIT_API_INFO",
+         "username": "PROVIDE_REDDIT_API_INFO",
+         "password": "PROVIDE_REDDIT_API_INFO"
+     }`
+
+
+
 - Copy over information into config.json
     - clientId: underneath "personal use script"
     - clientSecret: next to "secret"
