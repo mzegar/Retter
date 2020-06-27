@@ -26,6 +26,9 @@ abstract class MainPageViewModelBase with Store {
   }
 
   @observable
+  String expandedPost;
+
+  @observable
   List<Submission> submissionContent = ObservableList<Submission>();
 
   @observable

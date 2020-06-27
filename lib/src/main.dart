@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/common/LaunchURL.dart';
+import 'package:flutterreddit/src/common/PostIcon.dart';
 
 Future<void> main() async {
   //TODO: Add proper login, don't steal my info
@@ -18,7 +19,11 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     title: 'Reddit app',
-    theme: ThemeData.dark(),
+    theme: ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Colors.blue,
+      accentColor: Colors.blueAccent,
+    ),
     home: MainPage(
       viewModel: MainPageViewModel(reddit: reddit, user: currentUser),
     ),
@@ -97,22 +102,19 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildPost({BuildContext context, Submission submission}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0),
-      child: Card(
-        color: Colors.black26,
-        child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    submission.isSelf
-                        ? Icon(Icons.arrow_forward_ios)
-                        : Icon(Icons
-                            .videocam), // TODO: Display media widget / post instead
-                    Expanded(
-                      child: GestureDetector(
+    return Observer(builder: (_) {
+      var isExpanded = viewModel.expandedPost == submission.id;
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 0),
+        child: Card(
+          color: Colors.black26,
+          child: Padding(
+              padding: EdgeInsets.all(5),
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      GestureDetector(
                         onTap: () {
                           if (submission.isSelf) {
                             viewModel.goToPostPage(context, submission);
@@ -121,24 +123,58 @@ class MainPage extends StatelessWidget {
                           }
                         },
                         onLongPress: () {
-                          print('long press');
+                          viewModel.expandedPost = submission.id;
+                          print('clicked');
                         },
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Text(submission.title),
+                        child: Row(
+                          children: <Widget>[
+                            SubredditPost.buildPostIcon(submission),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Text(submission.title),
+                              ),
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Text(submission.upvotes.toString()),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Text(submission.upvotes.toString()),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            )),
-      ),
-    );
+                      isExpanded
+                          ? SizedBox(
+                              height: 10,
+                            )
+                          : SizedBox(),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        height: isExpanded ? 30 : 0,
+                        curve: Curves.fastOutSlowIn,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                viewModel.goToPostPage(context, submission);
+                              },
+                              child: Text(
+                                'Comments',
+                                style: TextStyle(
+                                  color: Colors.blueGrey
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+        ),
+      );
+    });
   }
 }

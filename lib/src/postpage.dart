@@ -1,9 +1,11 @@
 import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/postpage_viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutterreddit/src/common/LaunchURL.dart';
+import 'package:flutterreddit/src/common/PostIcon.dart';
 
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;
@@ -12,7 +14,7 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Scaffold(
+    return Scaffold(
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -26,6 +28,7 @@ class PostPage extends StatelessWidget {
           _buildPost(context: context, submission: viewModel.submission),
           if (viewModel.isSelfPost())
             _buildSelfText(context: context, submission: viewModel.submission),
+          _buildComments(),
         ],
       ),
     );
@@ -34,33 +37,37 @@ class PostPage extends StatelessWidget {
   Widget _buildPost({BuildContext context, Submission submission}) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0),
-      child: Card(
-        color: Colors.black26,
-        child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    submission.isSelf
-                        ? Icon(Icons.arrow_forward_ios)
-                        : Icon(Icons
-                            .videocam), // TODO: Display media widget / post instead
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(submission.title),
+      child: GestureDetector(
+        onTap: () {
+          if (!submission.isSelf) {
+            launchURL(submission.url.toString());
+          }
+        },
+        child: Card(
+          color: Colors.black26,
+          child: Padding(
+              padding: EdgeInsets.all(5),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      SubredditPost.buildPostIcon(submission),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(submission.title),
+                        ),
                       ),
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Text(submission.upvotes.toString()),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            )),
+                      Column(
+                        children: <Widget>[
+                          Text(submission.upvotes.toString()),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }
@@ -78,6 +85,43 @@ class PostPage extends StatelessWidget {
               launchURL(url);
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComments() {
+    return Observer(builder: (_) {
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
+        itemCount: viewModel.comments.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildComment(viewModel.comments[index]);
+        },
+      );
+    });
+  }
+
+  Widget _buildComment(Comment comment) {
+    return Card(
+      color: Colors.black26,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              comment.author,
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+            MarkdownBody(
+              data: comment.body,
+              onTapLink: (String url) {
+                launchURL(url);
+              },
+            ),
+          ],
         ),
       ),
     );

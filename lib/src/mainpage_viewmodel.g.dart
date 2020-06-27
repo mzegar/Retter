@@ -9,6 +9,21 @@ part of 'mainpage_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$MainPageViewModel on MainPageViewModelBase, Store {
+  final _$expandedPostAtom = Atom(name: 'MainPageViewModelBase.expandedPost');
+
+  @override
+  String get expandedPost {
+    _$expandedPostAtom.reportRead();
+    return super.expandedPost;
+  }
+
+  @override
+  set expandedPost(String value) {
+    _$expandedPostAtom.reportWrite(value, super.expandedPost, () {
+      super.expandedPost = value;
+    });
+  }
+
   final _$submissionContentAtom =
       Atom(name: 'MainPageViewModelBase.submissionContent');
 
@@ -44,6 +59,7 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
   @override
   String toString() {
     return '''
+expandedPost: ${expandedPost},
 submissionContent: ${submissionContent},
 currentSubreddit: ${currentSubreddit}
     ''';
