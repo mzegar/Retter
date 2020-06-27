@@ -1,6 +1,22 @@
 # Retter
 
-A flutter reddit app
+IOS/Android Reddit app created with Flutter
+
+## Building from source
+
+- Reddit OAuth2 key needs to be added locally
+- Navigate to https://old.reddit.com/prefs/apps
+    - Name: type "flutterapp"
+    - Select "script"
+    - Redirect url: type "http://localhost:8080"
+    - Click create app
+- Go to assets/config.json in the repository
+- Copy over information into config.json
+    - clientId: underneath "personal use script"
+    - clientSecret: next to "secret"
+    - userAgent: name of app (above "personal use script"_
+    - username: username of reddit account
+    - password: password of reddit account
 
 ## Contribution
 

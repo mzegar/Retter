@@ -1,18 +1,23 @@
 import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/common/LaunchURL.dart';
 import 'package:flutterreddit/src/common/PostIcon.dart';
+import 'dart:convert';
 
 Future<void> main() async {
-  //TODO: Add proper login, don't steal my info
+  WidgetsFlutterBinding.ensureInitialized();
+
+  String jsonConfigString = await rootBundle.loadString('assets/config.json');
+  var jsonConfig = json.decode(jsonConfigString);
   Reddit reddit = await Reddit.createScriptInstance(
-    clientId: 'aNfHGVwRIHidMQ',
-    clientSecret: 's7ZrpkVBUtB3Eua970V__qXZyZ0',
-    userAgent: 'flutterapp',
-    username: "testredditor20200622",
-    password: "weirdpassword2020", // Fake
+    clientId: jsonConfig['clientId'],
+    clientSecret: jsonConfig['clientSecret'],
+    userAgent: jsonConfig['userAgent'],
+    username: jsonConfig['username'],
+    password: jsonConfig['password'],
   );
 
   Redditor currentUser = await reddit.user.me();
