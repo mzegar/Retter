@@ -12,7 +12,7 @@ IOS/Android Reddit app created with Flutter
     - Click create app
 - Create config.json inside of /assets
     - Copy and paste this into config.json
-    
+
     `{
          "clientId": "PROVIDE_REDDIT_API_INFO",
          "clientSecret": "PROVIDE_REDDIT_API_INFO",
