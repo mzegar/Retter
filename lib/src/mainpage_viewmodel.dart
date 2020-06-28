@@ -34,6 +34,12 @@ abstract class MainPageViewModelBase with Store {
   @observable
   SubredditRef currentSubreddit;
 
+  @observable
+  bool loadingPosts = false;
+
+  @observable
+  bool loadedPostSuccessfully = true;
+
   void goToPostPage(BuildContext context, Submission submission) {
     Navigator.push(
       context,
@@ -44,16 +50,18 @@ abstract class MainPageViewModelBase with Store {
     );
   }
 
-  void changeToSubreddit(String subredditTextField) {
+  void changeToSubreddit(String subredditTextField) async {
     submissionContent.clear();
     currentSubreddit = reddit.subreddit(subredditTextField);
-    _getPosts(currentSubreddit);
+
+    loadedPostSuccessfully = true;
+    loadedPostSuccessfully = await _getPosts(currentSubreddit);
   }
 
-  void _initPage() {
+  void _initPage() async {
     _setDefaultSubreddit();
 
-    _getPosts(currentSubreddit);
+    changeToSubreddit(defaultSubredditString);
 
     _initScrollController();
   }
@@ -62,8 +70,9 @@ abstract class MainPageViewModelBase with Store {
     return currentSubreddit = reddit.subreddit('all');
   }
 
-  Future _getPosts(SubredditRef subredditToFetchFrom) async {
+  Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {
     try{
+      loadingPosts = true;
       var subreddit = subredditToFetchFrom.hot(
           after: submissionContent.isNotEmpty
               ? submissionContent.last.fullname
@@ -74,10 +83,12 @@ abstract class MainPageViewModelBase with Store {
         Submission submission = post;
         submissionContent.add(submission);
       }
+      loadingPosts = false;
+      return true;
     }
     catch(_) {
-      //TODO: handle this!
-      print('failed to load subs');
+      loadingPosts = false;
+      return false;
     }
   }
 

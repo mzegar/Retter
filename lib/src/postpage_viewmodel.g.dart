@@ -9,16 +9,32 @@ part of 'postpage_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$PostPageViewModel on PostPageViewModelBase, Store {
+  final _$loadingCommentsAtom =
+      Atom(name: 'PostPageViewModelBase.loadingComments');
+
+  @override
+  bool get loadingComments {
+    _$loadingCommentsAtom.reportRead();
+    return super.loadingComments;
+  }
+
+  @override
+  set loadingComments(bool value) {
+    _$loadingCommentsAtom.reportWrite(value, super.loadingComments, () {
+      super.loadingComments = value;
+    });
+  }
+
   final _$commentsAtom = Atom(name: 'PostPageViewModelBase.comments');
 
   @override
-  List<Comment> get comments {
+  List<PageComment> get comments {
     _$commentsAtom.reportRead();
     return super.comments;
   }
 
   @override
-  set comments(List<Comment> value) {
+  set comments(List<PageComment> value) {
     _$commentsAtom.reportWrite(value, super.comments, () {
       super.comments = value;
     });
@@ -27,6 +43,7 @@ mixin _$PostPageViewModel on PostPageViewModelBase, Store {
   @override
   String toString() {
     return '''
+loadingComments: ${loadingComments},
 comments: ${comments}
     ''';
   }

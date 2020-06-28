@@ -56,12 +56,46 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
     });
   }
 
+  final _$loadingPostsAtom = Atom(name: 'MainPageViewModelBase.loadingPosts');
+
+  @override
+  bool get loadingPosts {
+    _$loadingPostsAtom.reportRead();
+    return super.loadingPosts;
+  }
+
+  @override
+  set loadingPosts(bool value) {
+    _$loadingPostsAtom.reportWrite(value, super.loadingPosts, () {
+      super.loadingPosts = value;
+    });
+  }
+
+  final _$loadedPostSuccessfullyAtom =
+      Atom(name: 'MainPageViewModelBase.loadedPostSuccessfully');
+
+  @override
+  bool get loadedPostSuccessfully {
+    _$loadedPostSuccessfullyAtom.reportRead();
+    return super.loadedPostSuccessfully;
+  }
+
+  @override
+  set loadedPostSuccessfully(bool value) {
+    _$loadedPostSuccessfullyAtom
+        .reportWrite(value, super.loadedPostSuccessfully, () {
+      super.loadedPostSuccessfully = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 expandedPost: ${expandedPost},
 submissionContent: ${submissionContent},
-currentSubreddit: ${currentSubreddit}
+currentSubreddit: ${currentSubreddit},
+loadingPosts: ${loadingPosts},
+loadedPostSuccessfully: ${loadedPostSuccessfully}
     ''';
   }
 }

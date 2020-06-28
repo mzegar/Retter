@@ -1,4 +1,5 @@
 import 'package:draw/draw.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/postpage_viewmodel.dart';
@@ -14,24 +15,32 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(viewModel.submission.title)),
-      body: ListView(
-        children: <Widget>[
-          _buildPost(context: context, submission: viewModel.submission),
-          if (viewModel.isSelfPost())
-            _buildSelfText(context: context, submission: viewModel.submission),
-          _buildComments(),
-        ],
-      ),
-    );
+    return Observer(builder: (_) {
+      return Scaffold(
+        appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(viewModel.submission.title)),
+        body: ListView(
+          children: <Widget>[
+            _buildPost(context: context, submission: viewModel.submission),
+            if (viewModel.isSelfPost())
+              _buildSelfText(
+                  context: context, submission: viewModel.submission),
+            Divider(
+              thickness: 2,
+            ),
+            viewModel.loadingComments
+                ? _buildLoadingCommentsIndicator()
+                : _buildComments(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildPost({BuildContext context, Submission submission}) {
@@ -103,8 +112,9 @@ class PostPage extends StatelessWidget {
     });
   }
 
-  Widget _buildComment(Comment comment) {
+  Widget _buildComment(PageComment comment) {
     return Card(
+      margin: EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
       color: Colors.black26,
       child: Padding(
         padding: EdgeInsets.all(10),
@@ -112,17 +122,37 @@ class PostPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              comment.author,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+              comment.commentData.author,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            SizedBox(
+              height: 10,
             ),
             MarkdownBody(
-              data: comment.body,
+              data: comment.commentData.body,
               onTapLink: (String url) {
                 launchURL(url);
               },
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingCommentsIndicator() {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('Loading comments...'),
+          SizedBox(
+            width: 10,
+          ),
+          CupertinoActivityIndicator(),
+        ],
       ),
     );
   }

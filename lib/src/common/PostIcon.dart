@@ -14,6 +14,6 @@ class SubredditPost {
   }
 
   static Widget _buildIcon(IconData icon) {
-    return Icon(icon);
+    return Icon(icon, size: 25,);
   }
 }

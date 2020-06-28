@@ -1,4 +1,5 @@
 import 'package:draw/draw.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterreddit/src/mainpage_viewmodel.dart';
@@ -42,13 +43,18 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: _buildDrawer(context),
-      appBar: AppBar(
-        title: _buildTitle(),
-      ),
-      body: _buildListView(context),
-    );
+    return Observer(builder: (_) {
+      return Scaffold(
+        resizeToAvoidBottomInset : false,
+        drawer: _buildDrawer(context),
+        appBar: AppBar(
+          title: _buildTitle(),
+        ),
+        body: viewModel.loadedPostSuccessfully
+            ? _buildPosts(context)
+            : _buildFailedIndicator()
+      );
+    });
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -65,12 +71,10 @@ class MainPage extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                   hintText: 'Enter a subreddit',
                 ),
@@ -91,14 +95,18 @@ class MainPage extends StatelessWidget {
     });
   }
 
-  Widget _buildListView(BuildContext context) {
+  Widget _buildPosts(BuildContext context) {
     return Observer(builder: (_) {
       return ListView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
         controller: viewModel.scrollController,
-        itemCount: viewModel.submissionContent.length,
+        itemCount: viewModel.submissionContent.length + 1,
         itemBuilder: (_, index) {
+          if (index == viewModel.submissionContent.length) {
+            return _buildLoadingPostIndicator();
+          }
+
           var submissionData = viewModel.submissionContent.elementAt(index);
           return _buildPost(context: context, submission: submissionData);
         },
@@ -127,9 +135,8 @@ class MainPage extends StatelessWidget {
                             launchURL(submission.url.toString());
                           }
                         },
-                        onLongPress: () {
+                        onDoubleTap: () {
                           viewModel.expandedPost = submission.id;
-                          print('clicked');
                         },
                         child: Row(
                           children: <Widget>[
@@ -158,17 +165,21 @@ class MainPage extends StatelessWidget {
                         height: isExpanded ? 30 : 0,
                         curve: Curves.fastOutSlowIn,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
+                            Text(
+                              submission.author,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
                             GestureDetector(
                               onTap: () {
                                 viewModel.goToPostPage(context, submission);
                               },
                               child: Text(
                                 'Comments',
-                                style: TextStyle(
-                                  color: Colors.blueGrey
-                                ),
+                                style: TextStyle(color: Colors.blue),
                               ),
                             ),
                           ],
@@ -181,5 +192,27 @@ class MainPage extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _buildLoadingPostIndicator() {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('Loading posts...'),
+          SizedBox(
+            width: 10,
+          ),
+          CupertinoActivityIndicator(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFailedIndicator() {
+    return Center(
+      child: Text('Failed to load posts... does this subreddit exist?'),
+    );
   }
 }
