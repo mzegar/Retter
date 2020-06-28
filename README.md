@@ -28,7 +28,7 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 
 ## Images
 
-- Retter is always changing so these images may be outdated
+Retter is always changing so these images may be outdated
 
 https://imgur.com/a/sPhutbW
 
