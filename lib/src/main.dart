@@ -11,17 +11,16 @@ import 'dart:convert';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  //TODO: Setup logging in
   String jsonConfigString = await rootBundle.loadString('assets/config.json');
   var jsonConfig = json.decode(jsonConfigString);
-  Reddit reddit = await Reddit.createScriptInstance(
+  Reddit reddit = await Reddit.createReadOnlyInstance(
     clientId: jsonConfig['clientId'],
     clientSecret: jsonConfig['clientSecret'],
     userAgent: jsonConfig['userAgent'],
-    username: jsonConfig['username'],
-    password: jsonConfig['password'],
   );
 
-  Redditor currentUser = await reddit.user.me();
+  Redditor currentUser = null;
 
   runApp(MaterialApp(
     title: 'Retter',
