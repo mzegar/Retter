@@ -24,7 +24,7 @@ Future<void> main() async {
   Redditor currentUser = await reddit.user.me();
 
   runApp(MaterialApp(
-    title: 'Reddit app',
+    title: 'Retter',
     theme: ThemeData(
       brightness: Brightness.dark,
       primaryColor: Colors.blue,
@@ -147,10 +147,13 @@ class MainPage extends StatelessWidget {
                                 child: Text(submission.title),
                               ),
                             ),
-                            Column(
-                              children: <Widget>[
-                                Text(submission.upvotes.toString()),
-                              ],
+                            Padding(
+                              padding: EdgeInsets.only(left: 10, right: 0, top: 10, bottom: 10),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(submission.upvotes.toString()),
+                                ],
+                              ),
                             ),
                           ],
                         ),
