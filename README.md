@@ -33,4 +33,7 @@ Retter is always changing so these images may be outdated
 https://imgur.com/a/sPhutbW
 
 
-![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/retterimg.jpg "img1")
+![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img1.jpg "img1")
+![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img2.jpg "img2")
+![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img3.jpg "img3")
+![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img4.jpg "img4")
