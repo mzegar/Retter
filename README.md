@@ -13,22 +13,13 @@ IOS/Android Reddit app created with Flutter
 - Create config.json inside of /assets
     - Copy and paste this into config.json
 
-    `{
-         "clientId": "PROVIDE_REDDIT_API_INFO",
-         "clientSecret": "PROVIDE_REDDIT_API_INFO",
-         "userAgent": "PROVIDE_REDDIT_API_INFO",
-         "username": "PROVIDE_REDDIT_API_INFO",
-         "password": "PROVIDE_REDDIT_API_INFO"
-     }`
+    `{ "clientId": "PROVIDE_CLIENT_ID", "clientSecret": "PROVIDE_SECRET", "userAgent": "RetterApp"}`
 
 
 
 - Copy over information into config.json
     - clientId: underneath "personal use script"
     - clientSecret: next to "secret"
-    - userAgent: name of app (above "personal use script"_
-    - username: username of reddit account
-    - password: password of reddit account
 
 ## Contribution
 
