@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +21,18 @@ class PostPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: Icon(
+                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            title: Text(viewModel.submission.title)),
+            title: Align(
+                alignment: Platform.isAndroid
+                    ? Alignment.centerLeft
+                    : Alignment.center,
+                child: Text(viewModel.submission.title))),
         body: ListView(
           children: <Widget>[
             _buildPost(context: context, submission: viewModel.submission),
