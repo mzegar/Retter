@@ -139,7 +139,7 @@ class MainPage extends StatelessWidget {
                       children: <Widget>[
                         submission.isSelf
                             ? Container()
-                            : _buildPostThumbnail(submission.thumbnail),
+                            : _buildPostThumbnail(submission.preview),
                         Row(
                           children: <Widget>[
                             SubredditPost.buildPostIcon(submission),
@@ -222,14 +222,20 @@ class MainPage extends StatelessWidget {
   }
 }
 
-// https://old.reddit.com/r/redditdev/comments/39yr53/reddit_change_new_preview_images_available_for/
-// TODO: implement higher res thumbnail
-Widget _buildPostThumbnail(Uri url) {
+Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
+  var image = thumbnails.first.resolutions.last;
   return LayoutBuilder(
-      builder: (a, b) => CachedNetworkImage(
-          width: b.biggest.width,
-          imageUrl: url.toString(),
-          fit: BoxFit.fitWidth,
-          placeholder: (context, url) => CircularProgressIndicator(),
-          errorWidget: (context, url, error) => Container()));
+      builder: (a, b) => Padding(
+        padding: EdgeInsets.all(5),
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(5.0),
+          child: CachedNetworkImage(
+              imageUrl: image.url.toString(),
+              fit: BoxFit.fitWidth,
+              placeholder: (context, url) => Container(
+                child: CupertinoActivityIndicator(radius: 20,),
+              ),
+              errorWidget: (context, url, error) => Container()),
+        ),
+      ));
 }
