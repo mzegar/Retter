@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,15 +45,14 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
       return Scaffold(
-        resizeToAvoidBottomInset : false,
-        drawer: _buildDrawer(context),
-        appBar: AppBar(
-          title: _buildTitle(),
-        ),
-        body: viewModel.loadedPostSuccessfully
-            ? _buildPosts(context)
-            : _buildFailedIndicator()
-      );
+          resizeToAvoidBottomInset: false,
+          drawer: _buildDrawer(context),
+          appBar: AppBar(
+            title: _buildTitle(),
+          ),
+          body: viewModel.loadedPostSuccessfully
+              ? _buildPosts(context)
+              : _buildFailedIndicator());
     });
   }
 
@@ -124,20 +124,23 @@ class MainPage extends StatelessWidget {
               padding: EdgeInsets.all(5),
               child: Column(
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          if (submission.isSelf) {
-                            viewModel.goToPostPage(context, submission);
-                          } else {
-                            launchURL(submission.url.toString());
-                          }
-                        },
-                        onDoubleTap: () {
-                          viewModel.expandedPost = submission.id;
-                        },
-                        child: Row(
+                  GestureDetector(
+                    onTap: () {
+                      if (submission.isSelf) {
+                        viewModel.goToPostPage(context, submission);
+                      } else {
+                        launchURL(submission.url.toString());
+                      }
+                    },
+                    onDoubleTap: () {
+                      viewModel.expandedPost = submission.id;
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        submission.isSelf
+                            ? Container()
+                            : addImage(submission.thumbnail),
+                        Row(
                           children: <Widget>[
                             SubredditPost.buildPostIcon(submission),
                             Expanded(
@@ -147,7 +150,8 @@ class MainPage extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10, right: 0, top: 10, bottom: 10),
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 0, top: 10, bottom: 10),
                               child: Column(
                                 children: <Widget>[
                                   Text(submission.upvotes.toString()),
@@ -156,38 +160,37 @@ class MainPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                      isExpanded
-                          ? SizedBox(
-                              height: 10,
-                            )
-                          : SizedBox(),
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        height: isExpanded ? 30 : 0,
-                        curve: Curves.fastOutSlowIn,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Text(
-                              submission.author,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                viewModel.goToPostPage(context, submission);
-                              },
-                              child: Text(
-                                'Comments',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                          ],
+                      ],
+                    ),
+                  ),
+                  isExpanded
+                      ? SizedBox(
+                          height: 10,
+                        )
+                      : SizedBox(),
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    height: isExpanded ? 30 : 0,
+                    curve: Curves.fastOutSlowIn,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text(
+                          submission.author,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
                         ),
-                      ),
-                    ],
+                        GestureDetector(
+                          onTap: () {
+                            viewModel.goToPostPage(context, submission);
+                          },
+                          child: Text(
+                            'Comments',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               )),
@@ -217,4 +220,16 @@ class MainPage extends StatelessWidget {
       child: Text('Failed to load posts... does this subreddit exist?'),
     );
   }
+}
+
+/// Draw thumbnail using width available.
+///
+Widget addImage(Uri url) {
+  return LayoutBuilder(
+      builder: (a, b) => CachedNetworkImage(
+          width: b.biggest.width,
+          imageUrl: url.toString(),
+          fit: BoxFit.fitWidth,
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Container()));
 }
