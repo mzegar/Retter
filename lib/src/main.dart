@@ -139,7 +139,7 @@ class MainPage extends StatelessWidget {
                       children: <Widget>[
                         submission.isSelf
                             ? Container()
-                            : addImage(submission.thumbnail),
+                            : _buildPostThumbnail(submission.thumbnail),
                         Row(
                           children: <Widget>[
                             SubredditPost.buildPostIcon(submission),
@@ -222,9 +222,9 @@ class MainPage extends StatelessWidget {
   }
 }
 
-/// Draw thumbnail using width available.
-///
-Widget addImage(Uri url) {
+// https://old.reddit.com/r/redditdev/comments/39yr53/reddit_change_new_preview_images_available_for/
+// TODO: implement higher res thumbnail
+Widget _buildPostThumbnail(Uri url) {
   return LayoutBuilder(
       builder: (a, b) => CachedNetworkImage(
           width: b.biggest.width,
