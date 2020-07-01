@@ -28,8 +28,11 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 
 ## TODO
 
-- Button to collapse comments (including buttons to collapse nesting comments)
 - Saving subreddits accessed in drawer
+- Additional options for posts (copying link, viewing profile of author, etc)
+- Refresh subreddit posts by scrolling up
+- Sorting subreddits by sort type
+- Sorting comments by sort type
 
 ## License
 
