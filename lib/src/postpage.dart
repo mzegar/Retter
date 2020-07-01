@@ -134,7 +134,7 @@ class PostPage extends StatelessWidget {
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             color: Colors.black26,
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -166,7 +166,7 @@ class PostPage extends StatelessWidget {
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             color: Colors.black26,
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
