@@ -60,9 +60,11 @@ abstract class PostPageViewModelBase with Store {
   }
 
   void collapseNestedComments(int index) {
-    // Collapsed clicked on comment
+    // Collapse clicked on comment
     comments[index].isCollapsed = true;
 
+    // Mark comments below the collapsed comment as "isBelowCollapsed" which will completely
+    // remove them from the screen
     int collapseCommentIndex = index + 1;
     for (int i = collapseCommentIndex; i < comments.length; ++i) {
       if (comments[index].commentLevel < comments[i].commentLevel) {
@@ -74,9 +76,11 @@ abstract class PostPageViewModelBase with Store {
   }
 
   void unCollapseNestedComments(int index) {
-    // Collapsed clicked on comment
+    // UnCollapse clicked on comment
     comments[index].isCollapsed = false;
 
+    // Mark comments below the collapsed comment as not "isBelowCollapsed" which will
+    // reveal the comments again
     int collapseCommentIndex = index + 1;
     for (int i = collapseCommentIndex; i < comments.length; ++i) {
       if (comments[index].commentLevel < comments[i].commentLevel) {
