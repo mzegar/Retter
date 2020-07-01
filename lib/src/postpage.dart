@@ -114,39 +114,87 @@ class PostPage extends StatelessWidget {
         physics: ScrollPhysics(),
         itemCount: viewModel.comments.length,
         itemBuilder: (BuildContext context, int index) {
-          return _buildComment(viewModel.comments[index]);
+          return _buildComment(viewModel.comments[index], index);
         },
       );
     });
   }
 
-  Widget _buildComment(PageComment comment) {
-    return Card(
-      margin: EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
-      color: Colors.black26,
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              comment.commentData.author,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+  Widget _buildComment(PageComment comment, int index) {
+    return Observer(builder: (_) {
+      if (comment.isBelowCollapsed) {
+        return Container();
+      } else if (comment.isCollapsed) {
+        return GestureDetector(
+          onTap: () {
+            viewModel.unCollapseNestedComments(index);
+          },
+          child: Card(
+            margin:
+                EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
+            color: Colors.black26,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        comment.commentData.author,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      Icon(
+                        Icons.expand_more,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            SizedBox(
-              height: 10,
+          ),
+        );
+      } else {
+        return GestureDetector(
+          onTap: () {
+            viewModel.collapseNestedComments(index);
+          },
+          child: Card(
+            margin:
+                EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
+            color: Colors.black26,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        comment.commentData.author,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  MarkdownBody(
+                    data: comment.commentData.body,
+                    onTapLink: (String url) {
+                      launchURL(url);
+                    },
+                  ),
+                ],
+              ),
             ),
-            MarkdownBody(
-              data: comment.commentData.body,
-              onTapLink: (String url) {
-                launchURL(url);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        );
+      }
+    });
   }
 
   Widget _buildLoadingCommentsIndicator() {

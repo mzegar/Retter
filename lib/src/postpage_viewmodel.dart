@@ -7,12 +7,19 @@ import 'package:flutter/foundation.dart';
 part 'postpage_viewmodel.g.dart';
 
 class PostPageViewModel = PostPageViewModelBase with _$PostPageViewModel;
+class PageComment = PageCommentModelBase with _$PageComment;
 
-class PageComment {
+abstract class PageCommentModelBase with Store {
   final Comment commentData;
   final int commentLevel;
 
-  const PageComment({
+  @observable
+  bool isCollapsed = false;
+
+  @observable
+  bool isBelowCollapsed = false;
+
+  PageCommentModelBase({
     this.commentData,
     this.commentLevel,
   });
@@ -50,6 +57,34 @@ abstract class PostPageViewModelBase with Store {
 
     comments = ObservableList.of(postComments);
     loadingComments = false;
+  }
+
+  void collapseNestedComments(int index) {
+    // Collapsed clicked on comment
+    comments[index].isCollapsed = true;
+
+    int collapseCommentIndex = index + 1;
+    for (int i = collapseCommentIndex; i < comments.length; ++i) {
+      if (comments[index].commentLevel < comments[i].commentLevel) {
+        comments[i].isBelowCollapsed = true;
+      } else {
+        break;
+      }
+    }
+  }
+
+  void unCollapseNestedComments(int index) {
+    // Collapsed clicked on comment
+    comments[index].isCollapsed = false;
+
+    int collapseCommentIndex = index + 1;
+    for (int i = collapseCommentIndex; i < comments.length; ++i) {
+      if (comments[index].commentLevel < comments[i].commentLevel) {
+        comments[i].isBelowCollapsed = false;
+      } else {
+        break;
+      }
+    }
   }
 
   void _getNestedComments(List commentList, List<PageComment> pageCommentList, int level) {
