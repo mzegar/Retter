@@ -102,19 +102,24 @@ class MainPage extends StatelessWidget {
 
   Widget _buildPosts(BuildContext context) {
     return Observer(builder: (_) {
-      return ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        controller: viewModel.scrollController,
-        itemCount: viewModel.submissionContent.length + 1,
-        itemBuilder: (_, index) {
-          if (index == viewModel.submissionContent.length) {
-            return _buildLoadingPostIndicator();
-          }
-
-          var submissionData = viewModel.submissionContent.elementAt(index);
-          return _buildPost(context: context, submission: submissionData);
+      return RefreshIndicator(
+        onRefresh: () async {
+          await viewModel.refreshPosts();
         },
+        child: ListView.builder(
+          physics: ScrollPhysics(),
+          shrinkWrap: true,
+          controller: viewModel.scrollController,
+          itemCount: viewModel.submissionContent.length + 1,
+          itemBuilder: (_, index) {
+            if (index == viewModel.submissionContent.length) {
+              return _buildLoadingPostIndicator();
+            }
+
+            var submissionData = viewModel.submissionContent.elementAt(index);
+            return _buildPost(context: context, submission: submissionData);
+          },
+        ),
       );
     });
   }

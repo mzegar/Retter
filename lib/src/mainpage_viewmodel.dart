@@ -61,6 +61,12 @@ abstract class MainPageViewModelBase with Store {
     loadedPostSuccessfully = await _getPosts(currentSubreddit);
   }
 
+  Future refreshPosts() async {
+    submissionContent.clear();
+    loadedPostSuccessfully = true;
+    loadedPostSuccessfully = await _getPosts(currentSubreddit);
+  }
+
   void _initPage() async {
     _setDefaultSubreddit();
 
