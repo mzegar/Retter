@@ -140,14 +140,14 @@ class PostPage extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
+                      Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 20,
+                      ),
                       Text(
                         comment.commentData.author,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                      Icon(
-                        Icons.expand_more,
-                        size: 20,
                       ),
                     ],
                   ),
@@ -172,6 +172,10 @@ class PostPage extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 20,
+                      ),
                       Text(
                         comment.commentData.author,
                         style: TextStyle(
