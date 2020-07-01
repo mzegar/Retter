@@ -223,19 +223,24 @@ class MainPage extends StatelessWidget {
 }
 
 Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
-  var image = thumbnails.first.resolutions.last;
-  return LayoutBuilder(
-      builder: (a, b) => Padding(
-        padding: EdgeInsets.all(5),
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(5.0),
-          child: CachedNetworkImage(
-              imageUrl: image.url.toString(),
-              fit: BoxFit.fitWidth,
-              placeholder: (context, url) => Container(
-                child: CupertinoActivityIndicator(radius: 20,),
+  if (thumbnails != null && thumbnails.isNotEmpty) {
+    var image = thumbnails?.first?.resolutions?.last;
+    return LayoutBuilder(
+        builder: (a, b) => Padding(
+              padding: EdgeInsets.all(5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: CachedNetworkImage(
+                    imageUrl: image.url.toString(),
+                    fit: BoxFit.fitWidth,
+                    placeholder: (context, url) => Container(
+                          child: CupertinoActivityIndicator(
+                            radius: 20,
+                          ),
+                        ),
+                    errorWidget: (context, url, error) => Container()),
               ),
-              errorWidget: (context, url, error) => Container()),
-        ),
-      ));
+            ));
+  }
+  return Container();
 }
