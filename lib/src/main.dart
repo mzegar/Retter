@@ -7,7 +7,9 @@ import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/common/LaunchURL.dart';
 import 'package:flutterreddit/src/common/PostIcon.dart';
+import 'package:flutterreddit/src/common/config.dart';
 import 'dart:convert';
+import 'dart:io';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +25,10 @@ Future<void> main() async {
 
   Redditor currentUser = null;
 
+  Config config = Config(
+    isAndroid: Platform.isAndroid,
+  );
+
   runApp(MaterialApp(
     title: 'Retter',
     theme: ThemeData(
@@ -31,7 +37,7 @@ Future<void> main() async {
       accentColor: Colors.blueAccent,
     ),
     home: MainPage(
-      viewModel: MainPageViewModel(reddit: reddit, user: currentUser),
+      viewModel: MainPageViewModel(reddit: reddit, user: currentUser, config: config),
     ),
   ));
 }
@@ -224,10 +230,10 @@ class MainPage extends StatelessWidget {
 
 Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
   if (thumbnails != null && thumbnails.isNotEmpty) {
-    var image = thumbnails?.first?.resolutions?.last;
+    var image = thumbnails.first.resolutions.last;
     return LayoutBuilder(
         builder: (a, b) => Padding(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: CachedNetworkImage(
