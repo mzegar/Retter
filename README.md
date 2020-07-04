@@ -1,4 +1,8 @@
+![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/assets/icon/rettericon.png "RetterLogo")
 # Retter
+[![License badge](https://img.shields.io/github/license/mzegar/retter)](https://github.com/mzegar/Retter/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/mzegar/retter?style=social)](https://github.com/mzegar/retter/stargazers)
+
 
 IOS/Android Reddit app created with Flutter
 
