@@ -73,13 +73,30 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
     });
   }
 
+  final _$currentSortTypeAtom =
+      Atom(name: 'MainPageViewModelBase.currentSortType');
+
+  @override
+  PostSortType get currentSortType {
+    _$currentSortTypeAtom.reportRead();
+    return super.currentSortType;
+  }
+
+  @override
+  set currentSortType(PostSortType value) {
+    _$currentSortTypeAtom.reportWrite(value, super.currentSortType, () {
+      super.currentSortType = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 expandedPost: ${expandedPost},
 submissionContent: ${submissionContent},
 currentSubreddit: ${currentSubreddit},
-loadedPostSuccessfully: ${loadedPostSuccessfully}
+loadedPostSuccessfully: ${loadedPostSuccessfully},
+currentSortType: ${currentSortType}
     ''';
   }
 }

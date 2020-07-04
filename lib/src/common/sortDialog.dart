@@ -1,44 +1,30 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SortDialog extends StatelessWidget {
-  final String title, description, buttonText;
-  final Image image;
+  final Widget content;
 
   SortDialog({
-    @required this.title,
-    @required this.description,
-    @required this.buttonText,
-    this.image,
+    @required this.content,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
-      elevation: 0.0,
-      backgroundColor: Colors.blue,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text('Test'),
-        ],
-      ),
+    return CupertinoAlertDialog(
+      content: content
     );
   }
 }
 
 Future<bool> showSortDialog({
   @required BuildContext context,
+  @required Widget content,
 }) async {
   return await showDialog<bool>(
       context: context,
       builder: (_) {
         return SortDialog(
-          title: 'Test',
-          description: 'No Idea',
-          buttonText: 'Text',
+          content: content,
         );
       });
 }

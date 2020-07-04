@@ -11,6 +11,13 @@ part 'mainpage_viewmodel.g.dart';
 
 class MainPageViewModel = MainPageViewModelBase with _$MainPageViewModel;
 
+enum PostSortType {
+  HOT,
+  NEW,
+  CONTROVERSIAL,
+  RISING,
+}
+
 abstract class MainPageViewModelBase with Store {
   final Reddit reddit;
   final Redditor user;
@@ -39,6 +46,9 @@ abstract class MainPageViewModelBase with Store {
 
   @observable
   bool loadedPostSuccessfully = true;
+
+  @observable
+  PostSortType currentSortType = PostSortType.HOT;
 
   void goToPostPage(BuildContext context, Submission submission) {
     Navigator.push(
@@ -78,11 +88,38 @@ abstract class MainPageViewModelBase with Store {
 
   Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {
     try{
-      var subreddit = subredditToFetchFrom.hot(
-          after: submissionContent.isNotEmpty
-              ? submissionContent.last.fullname
-              : null,
-          limit: _numberOfPostsToFetch);
+      var subreddit;
+      // TODO: Handle all cases
+      switch(currentSortType) {
+        case PostSortType.HOT:
+          subreddit = subredditToFetchFrom.hot(
+              after: submissionContent.isNotEmpty
+                  ? submissionContent.last.fullname
+                  : null,
+              limit: _numberOfPostsToFetch);
+          break;
+        case PostSortType.NEW:
+          subreddit = subredditToFetchFrom.newest(
+              after: submissionContent.isNotEmpty
+                  ? submissionContent.last.fullname
+                  : null,
+              limit: _numberOfPostsToFetch);
+          break;
+        case PostSortType.CONTROVERSIAL:
+          subreddit = subredditToFetchFrom.controversial(
+              after: submissionContent.isNotEmpty
+                  ? submissionContent.last.fullname
+                  : null,
+              limit: _numberOfPostsToFetch);
+          break;
+        case PostSortType.RISING:
+          subreddit = subredditToFetchFrom.rising(
+              after: submissionContent.isNotEmpty
+                  ? submissionContent.last.fullname
+                  : null,
+              limit: _numberOfPostsToFetch);
+          break;
+      }
 
       await for (UserContent post in subreddit) {
         Submission submission = post;

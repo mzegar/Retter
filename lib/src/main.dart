@@ -105,7 +105,16 @@ class MainPage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.sort),
               onPressed: () async {
-                var sortType = await showSortDialog(context: context);
+                var clickedOnSortType = await showSortDialog(
+                    context: context,
+                    content: Column(
+                      children: _buildPostSortTypeOptions(context),
+                    ));
+
+                // is null if clicked on barrier dismissal
+                if (clickedOnSortType != null && clickedOnSortType) {
+                  await viewModel.refreshPosts();
+                }
               },
             ),
           ],
@@ -121,6 +130,31 @@ class MainPage extends StatelessWidget {
         if (viewModel.loadedPostSuccessfully) _buildPosts(context: context),
       ],
     );
+  }
+
+  List<Widget> _buildPostSortTypeOptions(BuildContext context) {
+    List<Widget> cards = [];
+    PostSortType.values.forEach((element) {
+      cards.add(Card(
+        child: InkWell(
+          child: Container(
+            width: 200,
+            height: 50,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Text(element.toString().split('.').last),
+              ),
+            ),
+          ),
+          onTap: () {
+            viewModel.currentSortType = element;
+            return Navigator.pop(context, true);
+          },
+        ),
+      ));
+    });
+    return cards;
   }
 
   Widget _buildPosts({BuildContext context}) {
