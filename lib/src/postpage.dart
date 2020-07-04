@@ -7,8 +7,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/postpage_viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutterreddit/src/common/LaunchURL.dart';
-import 'package:flutterreddit/src/common/PostIcon.dart';
+import 'package:flutterreddit/src/common/launchURL.dart';
+import 'package:flutterreddit/src/common/postIcon.dart';
 
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;

@@ -3,10 +3,11 @@ import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterreddit/src/common/sortDialog.dart';
 import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutterreddit/src/common/LaunchURL.dart';
-import 'package:flutterreddit/src/common/PostIcon.dart';
+import 'package:flutterreddit/src/common/launchURL.dart';
+import 'package:flutterreddit/src/common/postIcon.dart';
 import 'package:flutterreddit/src/common/config.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -94,41 +95,47 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildCustomScrollView(BuildContext context) {
+    return CustomScrollView(
+      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      controller: viewModel.scrollController,
+      slivers: <Widget>[
+        SliverAppBar(
+          floating: true,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.sort),
+              onPressed: () async {
+                var sortType = await showSortDialog(context: context);
+              },
+            ),
+          ],
+          flexibleSpace: FlexibleSpaceBar(
+            title: _buildTitle(),
+          ),
+        ),
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {
+            viewModel.refreshPosts();
+          },
+        ),
+        if (viewModel.loadedPostSuccessfully) _buildPosts(context: context),
+      ],
+    );
+  }
+
+  Widget _buildPosts({BuildContext context}) {
     return Observer(builder: (_) {
-      return CustomScrollView(
-        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        controller: viewModel.scrollController,
-        slivers: <Widget>[
-          SliverAppBar(
-            floating: true,
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.sort),
-                onPressed: () {},
-              ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              title: _buildTitle(),
-            ),
-          ),
-          CupertinoSliverRefreshControl(
-            onRefresh: () async {
-              viewModel.refreshPosts();
-            },
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              List.generate(viewModel.submissionContent.length + 1, (index) {
-                if (index == viewModel.submissionContent.length) {
-                  return _buildLoadingPostIndicator();
-                }
-                var submissionData =
-                    viewModel.submissionContent.elementAt(index);
-                return _buildPost(context: context, submission: submissionData);
-              }),
-            ),
-          ),
-        ],
+      return SliverList(
+        delegate: SliverChildListDelegate(
+          List.generate(viewModel.submissionContent.length + 1, (index) {
+            if (index == viewModel.submissionContent.length) {
+              return _buildLoadingPostIndicator();
+            }
+
+            var submissionData = viewModel.submissionContent.elementAt(index);
+            return _buildPost(context: context, submission: submissionData);
+          }),
+        ),
       );
     });
   }
@@ -235,32 +242,26 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFailedIndicator() {
-    return Center(
-      child: Text('Failed to load posts... does this subreddit exist?'),
-    );
-  }
-}
-
-Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
-  if (thumbnails != null && thumbnails.isNotEmpty) {
-    var image = thumbnails.first.resolutions.last;
-    return LayoutBuilder(
-        builder: (a, b) => Padding(
-              padding: EdgeInsets.all(10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: CachedNetworkImage(
-                    imageUrl: image.url.toString(),
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) => Container(
-                          child: CupertinoActivityIndicator(
-                            radius: 20,
+  Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
+    if (thumbnails != null && thumbnails.isNotEmpty) {
+      var image = thumbnails.first.resolutions.last;
+      return LayoutBuilder(
+          builder: (a, b) => Padding(
+                padding: EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: CachedNetworkImage(
+                      imageUrl: image.url.toString(),
+                      fit: BoxFit.fitWidth,
+                      placeholder: (context, url) => Container(
+                            child: CupertinoActivityIndicator(
+                              radius: 20,
+                            ),
                           ),
-                        ),
-                    errorWidget: (context, url, error) => Container()),
-              ),
-            ));
+                      errorWidget: (context, url, error) => Container()),
+                ),
+              ));
+    }
+    return Container();
   }
-  return Container();
 }
