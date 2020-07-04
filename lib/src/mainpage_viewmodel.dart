@@ -38,9 +38,6 @@ abstract class MainPageViewModelBase with Store {
   SubredditRef currentSubreddit;
 
   @observable
-  bool loadingPosts = false;
-
-  @observable
   bool loadedPostSuccessfully = true;
 
   void goToPostPage(BuildContext context, Submission submission) {
@@ -81,7 +78,6 @@ abstract class MainPageViewModelBase with Store {
 
   Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {
     try{
-      loadingPosts = true;
       var subreddit = subredditToFetchFrom.hot(
           after: submissionContent.isNotEmpty
               ? submissionContent.last.fullname
@@ -92,11 +88,9 @@ abstract class MainPageViewModelBase with Store {
         Submission submission = post;
         submissionContent.add(submission);
       }
-      loadingPosts = false;
       return true;
     }
     catch(_) {
-      loadingPosts = false;
       return false;
     }
   }

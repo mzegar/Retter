@@ -37,7 +37,8 @@ Future<void> main() async {
       accentColor: Colors.blueAccent,
     ),
     home: MainPage(
-      viewModel: MainPageViewModel(reddit: reddit, user: currentUser, config: config),
+      viewModel:
+          MainPageViewModel(reddit: reddit, user: currentUser, config: config),
     ),
   ));
 }
@@ -49,47 +50,39 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(builder: (_) {
-      return Scaffold(
-          resizeToAvoidBottomInset: false,
-          drawer: _buildDrawer(context),
-          appBar: AppBar(
-            title: _buildTitle(),
-          ),
-          body: viewModel.loadedPostSuccessfully
-              ? _buildPosts(context)
-              : _buildFailedIndicator());
-    });
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      drawer: _buildDrawer(context),
+      body: _buildCustomScrollView(context),
+    );
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return Observer(builder: (_) {
-      return Drawer(
-        child: ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: TextField(
-                onSubmitted: (String enteredText) {
-                  viewModel.changeToSubreddit(enteredText);
-                  Navigator.pop(context);
-                },
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                  hintText: 'Enter a subreddit',
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: TextField(
+              onSubmitted: (String enteredText) {
+                viewModel.changeToSubreddit(enteredText);
+                Navigator.pop(context);
+              },
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
                 ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                ),
+                hintText: 'Enter a subreddit',
               ),
             ),
-            ListTile(),
-          ],
-        ),
-      );
-    });
+          ),
+          ListTile(),
+        ],
+      ),
+    );
   }
 
   Widget _buildTitle() {
@@ -100,26 +93,42 @@ class MainPage extends StatelessWidget {
     });
   }
 
-  Widget _buildPosts(BuildContext context) {
+  Widget _buildCustomScrollView(BuildContext context) {
     return Observer(builder: (_) {
-      return RefreshIndicator(
-        onRefresh: () async {
-          await viewModel.refreshPosts();
-        },
-        child: ListView.builder(
-          physics: ScrollPhysics(),
-          shrinkWrap: true,
-          controller: viewModel.scrollController,
-          itemCount: viewModel.submissionContent.length + 1,
-          itemBuilder: (_, index) {
-            if (index == viewModel.submissionContent.length) {
-              return _buildLoadingPostIndicator();
-            }
-
-            var submissionData = viewModel.submissionContent.elementAt(index);
-            return _buildPost(context: context, submission: submissionData);
-          },
-        ),
+      return CustomScrollView(
+        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        controller: viewModel.scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.sort),
+                onPressed: () {},
+              ),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              title: _buildTitle(),
+            ),
+          ),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+              viewModel.refreshPosts();
+            },
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              List.generate(viewModel.submissionContent.length + 1, (index) {
+                if (index == viewModel.submissionContent.length) {
+                  return _buildLoadingPostIndicator();
+                }
+                var submissionData =
+                    viewModel.submissionContent.elementAt(index);
+                return _buildPost(context: context, submission: submissionData);
+              }),
+            ),
+          ),
+        ],
       );
     });
   }

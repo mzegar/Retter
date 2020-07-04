@@ -56,21 +56,6 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
     });
   }
 
-  final _$loadingPostsAtom = Atom(name: 'MainPageViewModelBase.loadingPosts');
-
-  @override
-  bool get loadingPosts {
-    _$loadingPostsAtom.reportRead();
-    return super.loadingPosts;
-  }
-
-  @override
-  set loadingPosts(bool value) {
-    _$loadingPostsAtom.reportWrite(value, super.loadingPosts, () {
-      super.loadingPosts = value;
-    });
-  }
-
   final _$loadedPostSuccessfullyAtom =
       Atom(name: 'MainPageViewModelBase.loadedPostSuccessfully');
 
@@ -94,7 +79,6 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
 expandedPost: ${expandedPost},
 submissionContent: ${submissionContent},
 currentSubreddit: ${currentSubreddit},
-loadingPosts: ${loadingPosts},
 loadedPostSuccessfully: ${loadedPostSuccessfully}
     ''';
   }
