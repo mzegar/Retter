@@ -69,11 +69,11 @@ SOFTWARE.
 Retter is always changing so these videos/images may be outdated
 
 Outdated video demo
-![alt text](https://www.youtube.com/watch?v=rVWFXjuiuVA "video1")
+[![Retter app demo](https://img.youtube.com/vi/rVWFXjuiuVA/maxresdefault.jpg)](https://www.youtube.com/watch?v=rVWFXjuiuVA)
 
 Outdated images
 https://imgur.com/a/sPhutbW
 ![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img1.jpg "img1")
-![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img2.jpg "img2")
-![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img3.jpg "img3")
-![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img4.jpg "img4")
+![retterimg](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img2.jpg "img2")
+![retterimg](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img3.jpg "img3")
+![retterimg](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img4.jpg "img4")
