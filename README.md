@@ -64,13 +64,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Images
+## Preview
 
-Retter is always changing so these images may be outdated
+Retter is always changing so these videos/images may be outdated
 
+Outdated video demo
+![alt text](https://www.youtube.com/watch?v=rVWFXjuiuVA "video1")
+
+Outdated images
 https://imgur.com/a/sPhutbW
-
-
 ![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img1.jpg "img1")
 ![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img2.jpg "img2")
 ![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img3.jpg "img3")
