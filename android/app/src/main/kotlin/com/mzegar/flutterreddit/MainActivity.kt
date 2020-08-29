@@ -1,4 +1,4 @@
-package com.example.flutterreddit
+package com.mzegar.flutterreddit
 
 import io.flutter.embedding.android.FlutterActivity
 
