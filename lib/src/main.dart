@@ -33,7 +33,7 @@ Future<void> main() async {
     title: 'Retter',
     theme: ThemeData(
       brightness: Brightness.dark,
-      primaryColor: Colors.blue,
+      primaryColor: Color(0xFF212121),
       accentColor: Colors.blueAccent,
     ),
     home: MainPage(
@@ -261,22 +261,19 @@ class MainPage extends StatelessWidget {
   Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
-      return LayoutBuilder(
-          builder: (a, b) => Padding(
-                padding: EdgeInsets.all(10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: CachedNetworkImage(
-                      imageUrl: image.url.toString(),
-                      fit: BoxFit.fitWidth,
-                      placeholder: (context, url) => Container(
-                            child: Container(
-                              width: image.width.toDouble(),
-                            ),
-                          ),
-                      errorWidget: (context, url, error) => Container()),
-                ),
-              ));
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(3.0),
+        child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: CachedNetworkImage(
+              imageUrl: image.url.toString(),
+              fit: BoxFit.fitWidth,
+              placeholder: (context, url) => CupertinoActivityIndicator(
+                radius: 20,
+              ),
+              errorWidget: (context, url, error) => Container()),
+        ),
+      );
     }
     return Container();
   }
