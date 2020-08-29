@@ -3,7 +3,6 @@ import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterreddit/src/common/sortDialog.dart';
 import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/src/common/launchURL.dart';
@@ -15,7 +14,7 @@ import 'dart:io';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //TODO: Setup logging in
+  //TODO: Setup logging in and some system to parse information somewhere else
   String jsonConfigString = await rootBundle.loadString('assets/config.json');
   var jsonConfig = json.decode(jsonConfigString);
   Reddit reddit = await Reddit.createReadOnlyInstance(
@@ -101,23 +100,6 @@ class MainPage extends StatelessWidget {
       slivers: <Widget>[
         SliverAppBar(
           floating: true,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.sort),
-              onPressed: () async {
-                var clickedOnSortType = await showSortDialog(
-                    context: context,
-                    content: Column(
-                      children: _buildPostSortTypeOptions(context),
-                    ));
-
-                // is null if clicked on barrier dismissal
-                if (clickedOnSortType != null && clickedOnSortType) {
-                  await viewModel.refreshPosts();
-                }
-              },
-            ),
-          ],
           flexibleSpace: FlexibleSpaceBar(
             title: _buildTitle(),
           ),
@@ -288,8 +270,8 @@ class MainPage extends StatelessWidget {
                       imageUrl: image.url.toString(),
                       fit: BoxFit.fitWidth,
                       placeholder: (context, url) => Container(
-                            child: CupertinoActivityIndicator(
-                              radius: 20,
+                            child: Container(
+                              width: image.width.toDouble(),
                             ),
                           ),
                       errorWidget: (context, url, error) => Container()),
