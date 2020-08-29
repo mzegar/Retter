@@ -46,3 +46,5 @@ app.*.map.json
 
 # Repo specific
 *assets/config.json
+key.jks
+android/key.properties
