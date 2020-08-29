@@ -24,6 +24,8 @@ IOS/Android Reddit app created with Flutter
 - Copy over information into config.json
     - clientId: underneath "personal use script"
     - clientSecret: next to "secret"
+    
+- Run using `flutter run -t lib/src/main.dart`
 
 ## Contribution
 
