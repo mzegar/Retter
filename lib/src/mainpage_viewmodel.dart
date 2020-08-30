@@ -7,6 +7,8 @@ import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterreddit/src/common/config.dart';
 
+import 'common/routeTransition.dart';
+
 part 'mainpage_viewmodel.g.dart';
 
 class MainPageViewModel = MainPageViewModelBase with _$MainPageViewModel;
@@ -27,11 +29,8 @@ abstract class MainPageViewModelBase with Store {
 
   final int _numberOfPostsToFetch = 25;
 
-  MainPageViewModelBase({
-    @required this.reddit,
-    @required this.user,
-    @required this.config
-  }) {
+  MainPageViewModelBase(
+      {@required this.reddit, @required this.user, @required this.config}) {
     _initPage();
   }
 
@@ -53,10 +52,11 @@ abstract class MainPageViewModelBase with Store {
   void goToPostPage(BuildContext context, Submission submission) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => PostPage(
-                viewModel: PostPageViewModel(submission: submission),
-              )),
+      SlideRightRoute(
+        page: PostPage(
+          viewModel: PostPageViewModel(submission: submission),
+        ),
+      ),
     );
   }
 
@@ -87,10 +87,10 @@ abstract class MainPageViewModelBase with Store {
   }
 
   Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {
-    try{
+    try {
       var subreddit;
       // TODO: Handle all cases
-      switch(currentSortType) {
+      switch (currentSortType) {
         case PostSortType.HOT:
           subreddit = subredditToFetchFrom.hot(
               after: submissionContent.isNotEmpty
@@ -126,8 +126,7 @@ abstract class MainPageViewModelBase with Store {
         submissionContent.add(submission);
       }
       return true;
-    }
-    catch(_) {
+    } catch (_) {
       return false;
     }
   }

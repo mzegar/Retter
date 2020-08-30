@@ -12,7 +12,8 @@ class SubredditPost {
     } else if (submission.isVideo) {
       return _buildIcon(Icons.videocam);
     } else {
-      return _buildIcon(  Platform.isAndroid ? Icons.open_in_browser: Icons.launch);
+      return _buildIcon(
+          Platform.isAndroid ? Icons.open_in_browser : Icons.launch);
     }
   }
 

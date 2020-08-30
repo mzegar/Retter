@@ -10,9 +10,7 @@ class SortDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
-      content: content
-    );
+    return CupertinoAlertDialog(content: content);
   }
 }
 

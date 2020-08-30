@@ -35,7 +35,7 @@ Future<void> main() async {
     title: 'Retter',
     theme: ThemeData(
       brightness: Brightness.dark,
-      primaryColor: Color(0xFF212121),
+      primaryColor: Color(0xFF030303),
       accentColor: Colors.blueAccent,
     ),
     home: MainPage(
@@ -53,6 +53,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF121212),
       resizeToAvoidBottomInset: false,
       drawer: _buildDrawer(context),
       body: _buildCustomScrollView(context),
@@ -61,28 +62,31 @@ class MainPage extends StatelessWidget {
 
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: TextField(
-              onSubmitted: (String enteredText) {
-                viewModel.changeToSubreddit(enteredText);
-                Navigator.pop(context);
-              },
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
+      child: Container(
+        color: Color(0xFF121212),
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: TextField(
+                onSubmitted: (String enteredText) {
+                  viewModel.changeToSubreddit(enteredText);
+                  Navigator.pop(context);
+                },
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                  ),
+                  hintText: 'Enter a subreddit',
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                ),
-                hintText: 'Enter a subreddit',
               ),
             ),
-          ),
-          ListTile(),
-        ],
+            ListTile(),
+          ],
+        ),
       ),
     );
   }
@@ -164,7 +168,7 @@ class MainPage extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: Container(
-          color: Colors.black26,
+          color: Color(0xFF282828),
           child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(

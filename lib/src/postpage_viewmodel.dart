@@ -91,11 +91,13 @@ abstract class PostPageViewModelBase with Store {
     }
   }
 
-  void _getNestedComments(List commentList, List<PageComment> pageCommentList, int level) {
+  void _getNestedComments(
+      List commentList, List<PageComment> pageCommentList, int level) {
     level += 1;
     for (var comment in commentList) {
       if (comment is Comment) {
-        pageCommentList.add(PageComment(commentData: comment, commentLevel: level));
+        pageCommentList
+            .add(PageComment(commentData: comment, commentLevel: level));
 
         if (comment.replies != null) {
           _getNestedComments(comment.replies.comments, pageCommentList, level);

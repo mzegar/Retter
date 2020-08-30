@@ -19,6 +19,7 @@ class PostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
       return Scaffold(
+        backgroundColor: Color(0xFF121212),
         appBar: AppBar(
             leading: IconButton(
               icon: Icon(
@@ -61,7 +62,7 @@ class PostPage extends StatelessWidget {
           }
         },
         child: Container(
-          color: Colors.black26,
+          color: Color(0xFF282828),
           child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
@@ -93,7 +94,7 @@ class PostPage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(5),
       child: Container(
-        color: Colors.black26,
+        color: Color(0xFF282828),
         child: Padding(
           padding: EdgeInsets.all(5),
           child: MarkdownBody(
@@ -132,7 +133,7 @@ class PostPage extends StatelessWidget {
           child: Container(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
-            color: Colors.black26,
+            color: Color(0xFF282828),
             child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
@@ -147,7 +148,9 @@ class PostPage extends StatelessWidget {
                       Text(
                         comment.commentData.author,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -164,7 +167,7 @@ class PostPage extends StatelessWidget {
           child: Container(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
-            color: Colors.black26,
+            color: Color(0xFF282828),
             child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
@@ -179,7 +182,9 @@ class PostPage extends StatelessWidget {
                       Text(
                         comment.commentData.author,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
