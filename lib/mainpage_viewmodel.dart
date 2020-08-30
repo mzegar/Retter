@@ -28,8 +28,11 @@ abstract class MainPageViewModelBase with Store {
 
   final int _numberOfPostsToFetch = 25;
 
-  MainPageViewModelBase(
-      {@required this.reddit, @required this.user, @required this.config}) {
+  MainPageViewModelBase({
+    @required this.reddit,
+    @required this.user,
+    @required this.config,
+  }) {
     _initPage();
   }
 

@@ -12,6 +12,8 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterreddit/mainpage_viewmodel.dart';
 
+import 'drawer.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -61,33 +63,11 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-      child: Container(
-        color: Color(0xFF121212),
-        child: ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: TextField(
-                onSubmitted: (String enteredText) {
-                  viewModel.changeToSubreddit(enteredText);
-                  Navigator.pop(context);
-                },
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                  hintText: 'Enter a subreddit',
-                ),
-              ),
-            ),
-            ListTile(),
-          ],
-        ),
-      ),
+    return SubDrawer(
+      onSubmitted: (String enteredText) {
+        viewModel.changeToSubreddit(enteredText);
+        Navigator.pop(context);
+      },
     );
   }
 
