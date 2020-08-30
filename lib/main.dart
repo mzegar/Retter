@@ -3,14 +3,14 @@ import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterreddit/src/mainpage_viewmodel.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutterreddit/src/common/launchURL.dart';
-import 'package:flutterreddit/src/common/postIcon.dart';
-import 'package:flutterreddit/src/common/config.dart';
+import 'package:flutterreddit/common/launchURL.dart';
+import 'package:flutterreddit/common/postIcon.dart';
+import 'package:flutterreddit/common/config.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutterreddit/mainpage_viewmodel.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

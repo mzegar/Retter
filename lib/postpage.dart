@@ -4,11 +4,11 @@ import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutterreddit/src/postpage_viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutterreddit/src/common/launchURL.dart';
-import 'package:flutterreddit/src/common/postIcon.dart';
+import 'package:flutterreddit/common/launchURL.dart';
+import 'package:flutterreddit/common/postIcon.dart';
+import 'package:flutterreddit/postpage_viewmodel.dart';
 
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;

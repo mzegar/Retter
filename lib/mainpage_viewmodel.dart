@@ -1,13 +1,12 @@
 import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterreddit/src/postpage.dart';
-import 'package:flutterreddit/src/postpage_viewmodel.dart';
+import 'package:flutterreddit/postpage.dart';
+import 'package:flutterreddit/common/routeTransition.dart';
+import 'package:flutterreddit/postpage_viewmodel.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutterreddit/src/common/config.dart';
-
-import 'common/routeTransition.dart';
+import 'package:flutterreddit/common/config.dart';
 
 part 'mainpage_viewmodel.g.dart';
 

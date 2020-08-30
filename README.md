@@ -25,7 +25,7 @@ IOS/Android Reddit app created with Flutter
     - clientId: underneath "personal use script"
     - clientSecret: next to "secret"
     
-- Run using `flutter run -t lib/src/main.dart`
+- Run using `flutter run` or with IDE such as Android Studio
 
 ## Contribution
 
