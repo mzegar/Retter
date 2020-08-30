@@ -10,6 +10,7 @@ import 'package:flutterreddit/src/common/postIcon.dart';
 import 'package:flutterreddit/src/common/config.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ Future<void> main() async {
 
   Config config = Config(
     isAndroid: Platform.isAndroid,
+    sharedPreferences: await SharedPreferences.getInstance(),
   );
 
   runApp(MaterialApp(
@@ -160,8 +162,8 @@ class MainPage extends StatelessWidget {
     return Observer(builder: (_) {
       var isExpanded = viewModel.expandedPost == submission.id;
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 0),
-        child: Card(
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        child: Container(
           color: Colors.black26,
           child: Padding(
               padding: EdgeInsets.all(5),
@@ -261,16 +263,15 @@ class MainPage extends StatelessWidget {
   Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(3.0),
+      return Container(
         child: Padding(
           padding: EdgeInsets.all(5.0),
           child: CachedNetworkImage(
               imageUrl: image.url.toString(),
               fit: BoxFit.fitWidth,
               placeholder: (context, url) => CupertinoActivityIndicator(
-                radius: 20,
-              ),
+                    radius: 20,
+                  ),
               errorWidget: (context, url, error) => Container()),
         ),
       );

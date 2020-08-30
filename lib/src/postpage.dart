@@ -53,14 +53,14 @@ class PostPage extends StatelessWidget {
 
   Widget _buildPost({BuildContext context, Submission submission}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0),
+      padding: EdgeInsets.all(5),
       child: GestureDetector(
         onTap: () {
           if (!submission.isSelf) {
             launchURL(submission.url.toString());
           }
         },
-        child: Card(
+        child: Container(
           color: Colors.black26,
           child: Padding(
               padding: EdgeInsets.all(5),
@@ -91,8 +91,8 @@ class PostPage extends StatelessWidget {
 
   Widget _buildSelfText({BuildContext context, Submission submission}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0),
-      child: Card(
+      padding: EdgeInsets.all(5),
+      child: Container(
         color: Colors.black26,
         child: Padding(
           padding: EdgeInsets.all(5),
@@ -129,7 +129,7 @@ class PostPage extends StatelessWidget {
           onTap: () {
             viewModel.unCollapseNestedComments(index);
           },
-          child: Card(
+          child: Container(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             color: Colors.black26,
@@ -161,7 +161,7 @@ class PostPage extends StatelessWidget {
           onTap: () {
             viewModel.collapseNestedComments(index);
           },
-          child: Card(
+          child: Container(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             color: Colors.black26,
