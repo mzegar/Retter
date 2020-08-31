@@ -40,6 +40,9 @@ abstract class MainPageViewModelBase with Store {
   String expandedPost;
 
   @observable
+  List<String> savedSubs = ObservableList<String>();
+
+  @observable
   List<Submission> submissionContent = ObservableList<Submission>();
 
   @observable
@@ -68,6 +71,13 @@ abstract class MainPageViewModelBase with Store {
 
     loadedPostSuccessfully = true;
     loadedPostSuccessfully = await _getPosts(currentSubreddit);
+    if (loadedPostSuccessfully) {
+      savedSubs = ObservableList.of(config.saveSubreddit(subredditTextField));
+    }
+  }
+
+  void deleteSubreddit(String subredditToDelete) {
+    savedSubs = ObservableList.of(config.deleteSubreddit(subredditToDelete));
   }
 
   Future refreshPosts() async {

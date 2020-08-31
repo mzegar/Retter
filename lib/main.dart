@@ -7,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/common/launchURL.dart';
 import 'package:flutterreddit/common/postIcon.dart';
 import 'package:flutterreddit/common/config.dart';
+import 'package:mobx/mobx.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,21 +55,33 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF121212),
-      resizeToAvoidBottomInset: false,
-      drawer: _buildDrawer(context),
-      body: _buildCustomScrollView(context),
-    );
+    return Observer(builder: (_) {
+      return Scaffold(
+        backgroundColor: Color(0xFF121212),
+        resizeToAvoidBottomInset: false,
+        drawer: _buildDrawer(context),
+        body: _buildCustomScrollView(context),
+      );
+    });
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return SubDrawer(
-      onSubmitted: (String enteredText) {
-        viewModel.changeToSubreddit(enteredText);
-        Navigator.pop(context);
-      },
-    );
+    return Observer(builder: (_) {
+      return SubDrawer(
+        savedSubs: viewModel.savedSubs,
+        onSavedSubredditTap: (String subredditClicked) {
+          viewModel.changeToSubreddit(subredditClicked);
+          Navigator.pop(context);
+        },
+        onSubmitted: (String enteredText) {
+          viewModel.changeToSubreddit(enteredText);
+          Navigator.pop(context);
+        },
+        onDeleteSubredditTap: (String subredditDeleted) {
+          viewModel.deleteSubreddit(subredditDeleted);
+        },
+      );
+    });
   }
 
   Widget _buildTitle() {

@@ -24,6 +24,21 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
     });
   }
 
+  final _$savedSubsAtom = Atom(name: 'MainPageViewModelBase.savedSubs');
+
+  @override
+  List<String> get savedSubs {
+    _$savedSubsAtom.reportRead();
+    return super.savedSubs;
+  }
+
+  @override
+  set savedSubs(List<String> value) {
+    _$savedSubsAtom.reportWrite(value, super.savedSubs, () {
+      super.savedSubs = value;
+    });
+  }
+
   final _$submissionContentAtom =
       Atom(name: 'MainPageViewModelBase.submissionContent');
 
@@ -93,6 +108,7 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
   String toString() {
     return '''
 expandedPost: ${expandedPost},
+savedSubs: ${savedSubs},
 submissionContent: ${submissionContent},
 currentSubreddit: ${currentSubreddit},
 loadedPostSuccessfully: ${loadedPostSuccessfully},
