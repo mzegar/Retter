@@ -34,11 +34,7 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 
 ## TODO
 
-- Saving subreddits accessed in drawer
-- Additional options for posts (copying link, viewing profile of author, etc)
-- Refresh subreddit posts by scrolling up
-- Sorting subreddits by sort type
-- Sorting comments by sort type
+https://github.com/mzegar/Retter/issues
 
 ## Preview
 
