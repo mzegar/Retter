@@ -8,6 +8,10 @@ IOS/Android Reddit app created with Flutter
 
 https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
+## Screenshots
+
+<img src="/screenshots/img3.jpg" width="350"> <img src="/screenshots/img2.jpg" width="350"> <img src="/screenshots/img1.jpg" width="350">
+
 ## Building from source
 
 - Reddit OAuth2 key needs to be added locally
@@ -37,17 +41,3 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 ## TODO
 
 https://github.com/mzegar/Retter/issues
-
-## Screenshots
-
-Retter is always changing so these videos/images may be outdated
-
-<img src="/screenshots/img3.jpg" width="350">
-
-<img src="/screenshots/img2.jpg" width="350">
-
-<img src="/screenshots/img1.jpg" width="350">
-
-### Outdated video demo
-[![Retter app demo](https://img.youtube.com/vi/rVWFXjuiuVA/maxresdefault.jpg)](https://www.youtube.com/watch?v=rVWFXjuiuVA)
-
