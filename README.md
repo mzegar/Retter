@@ -38,16 +38,16 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 
 https://github.com/mzegar/Retter/issues
 
-## Preview
+## Screenshots
 
 Retter is always changing so these videos/images may be outdated
 
-Outdated video demo
+<img src="/screenshots/img3.jpg" width="350">
+
+<img src="/screenshots/img2.jpg" width="350">
+
+<img src="/screenshots/img1.jpg" width="350">
+
+### Outdated video demo
 [![Retter app demo](https://img.youtube.com/vi/rVWFXjuiuVA/maxresdefault.jpg)](https://www.youtube.com/watch?v=rVWFXjuiuVA)
 
-Outdated images
-https://imgur.com/a/sPhutbW
-![alt text](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img1.jpg "img1")
-![retterimg](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img2.jpg "img2")
-![retterimg](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img3.jpg "img3")
-![retterimg](https://raw.githubusercontent.com/mzegar/Retter/master/screenshots/img4.jpg "img4")
