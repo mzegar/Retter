@@ -5,6 +5,7 @@
 
 
 IOS/Android Reddit app created with Flutter
+https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
 ## Building from source
 
