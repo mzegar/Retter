@@ -35,7 +35,7 @@ https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
 ## Contribution
 
-I'm open to anyone contributing to this repo. I'd advise using Android Studio and running a `dartfmt` before creating a pull request: `dartfmt -w lib`.
+I'm open to anyone contributing to this repo. I'd advise using Android Studio and running a `dartfmt` before creating a pull request: `dartfmt`.
 Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel pattern. Check out `src/main.dart` and `src/mainpage_viewmodel.dart`.
 
 ## TODO
