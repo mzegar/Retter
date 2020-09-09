@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/common/launchURL.dart';
+import 'package:flutterreddit/common/popupMenu.dart';
 import 'package:flutterreddit/common/postIcon.dart';
 import 'package:flutterreddit/common/config.dart';
 import 'dart:io';
@@ -92,6 +93,9 @@ class MainPage extends StatelessWidget {
           flexibleSpace: FlexibleSpaceBar(
             title: _buildTitle(),
           ),
+          actions: [
+            CustomPopupMenu(),
+          ],
         ),
         CupertinoSliverRefreshControl(
           onRefresh: () async {

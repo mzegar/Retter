@@ -65,7 +65,8 @@ class Config {
         var authCode = Uri.parse(url).queryParameters['code'];
         await redditLogin.auth.authorize(authCode);
         flutterWebView.close();
-      } else if (url.contains('$redirectUri?state=$userAgent&error=access_denied')) {
+      } else if (url
+          .contains('$redirectUri?state=$userAgent&error=access_denied')) {
         // TODO: Failed to authenticate, use anonymous login
         flutterWebView.close();
         return await anonymousLogin();
