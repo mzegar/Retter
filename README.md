@@ -14,24 +14,9 @@ https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
 ## Building from source
 
-- Reddit OAuth2 key needs to be added locally
-- Navigate to https://old.reddit.com/prefs/apps
-    - Name: type "flutterapp"
-    - Select "script"
-    - Redirect url: type "http://localhost:8080"
-    - Click create app
-- Create config.json inside of /assets
-    - Copy and paste this into config.json
+- Clone the repo, `cd Retter-master`
 
-    `{ "clientId": "PROVIDE_CLIENT_ID", "clientSecret": "PROVIDE_SECRET", "userAgent": "RetterApp"}`
-
-
-
-- Copy over information into config.json
-    - clientId: underneath "personal use script"
-    - clientSecret: next to "secret"
-    
-- Run using `flutter run` or with IDE such as Android Studio
+- Run using `flutter run` or open with an IDE such as Android Studio
 
 ## Contribution
 

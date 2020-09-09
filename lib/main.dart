@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +8,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/common/launchURL.dart';
 import 'package:flutterreddit/common/postIcon.dart';
 import 'package:flutterreddit/common/config.dart';
-import 'package:mobx/mobx.dart';
-import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterreddit/mainpage_viewmodel.dart';
@@ -17,17 +16,6 @@ import 'drawer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  //TODO: Setup logging in and some system to parse information somewhere else
-  String jsonConfigString = await rootBundle.loadString('assets/config.json');
-  var jsonConfig = json.decode(jsonConfigString);
-  Reddit reddit = await Reddit.createReadOnlyInstance(
-    clientId: jsonConfig['clientId'],
-    clientSecret: jsonConfig['clientSecret'],
-    userAgent: jsonConfig['userAgent'],
-  );
-
-  Redditor currentUser = null;
 
   Config config = Config(
     isAndroid: Platform.isAndroid,
@@ -42,8 +30,10 @@ Future<void> main() async {
       accentColor: Colors.blueAccent,
     ),
     home: MainPage(
-      viewModel:
-          MainPageViewModel(reddit: reddit, user: currentUser, config: config),
+      viewModel: MainPageViewModel(
+        reddit: await config.anonymousLogin(),
+        config: config,
+      ),
     ),
   ));
 }

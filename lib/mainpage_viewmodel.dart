@@ -21,7 +21,6 @@ enum PostSortType {
 
 abstract class MainPageViewModelBase with Store {
   final Reddit reddit;
-  final Redditor user;
   final Config config;
   final ScrollController scrollController = ScrollController();
   final String defaultSubredditString = 'all';
@@ -30,7 +29,6 @@ abstract class MainPageViewModelBase with Store {
 
   MainPageViewModelBase({
     @required this.reddit,
-    @required this.user,
     @required this.config,
   }) {
     _initPage();
