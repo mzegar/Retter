@@ -94,7 +94,17 @@ class MainPage extends StatelessWidget {
             title: _buildTitle(),
           ),
           actions: [
-            CustomPopupMenu(),
+            CustomPopupMenu(
+              onTap: (popupMenuOptions optionSelected) async {
+                switch (optionSelected) {
+                  case popupMenuOptions.Login:
+                    break;
+                  case popupMenuOptions.Settings:
+                    // TODO: Handle this case.
+                    break;
+                }
+              },
+            ),
           ],
         ),
         CupertinoSliverRefreshControl(
@@ -105,31 +115,6 @@ class MainPage extends StatelessWidget {
         if (viewModel.loadedPostSuccessfully) _buildPosts(context: context),
       ],
     );
-  }
-
-  List<Widget> _buildPostSortTypeOptions(BuildContext context) {
-    List<Widget> cards = [];
-    PostSortType.values.forEach((element) {
-      cards.add(Card(
-        child: InkWell(
-          child: Container(
-            width: 200,
-            height: 50,
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Text(element.toString().split('.').last),
-              ),
-            ),
-          ),
-          onTap: () {
-            viewModel.currentSortType = element;
-            return Navigator.pop(context, true);
-          },
-        ),
-      ));
-    });
-    return cards;
   }
 
   Widget _buildPosts({BuildContext context}) {
