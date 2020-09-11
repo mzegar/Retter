@@ -11,6 +11,7 @@ class Config {
   static final String redirectUri = 'https://mzegar.github.io/';
 
   static final String subredditKey = 'subreddits';
+  static final String credentialsKey = 'credentials';
   final bool isAndroid;
   final SharedPreferences sharedPreferences;
 
@@ -45,7 +46,7 @@ class Config {
     return sharedPreferencesSubs;
   }
 
-  Future<Reddit> login() async {
+  Future login(void Function(Reddit redditResponse) onLogin) async {
     FlutterWebviewPlugin flutterWebView = FlutterWebviewPlugin();
 
     final redditLogin = Reddit.createInstalledFlowInstance(
@@ -64,18 +65,50 @@ class Config {
       if (url.contains('$redirectUri?state=$userAgent&code=')) {
         var authCode = Uri.parse(url).queryParameters['code'];
         await redditLogin.auth.authorize(authCode);
+        saveLoginDetails(redditLogin.auth.credentials.toJson());
         flutterWebView.close();
+        onLogin(redditLogin);
       } else if (url
           .contains('$redirectUri?state=$userAgent&error=access_denied')) {
-        // TODO: Failed to authenticate, use anonymous login
+        // TODO: Failed to authenticate
         flutterWebView.close();
-        return await anonymousLogin();
+        onLogin(null);
       }
     });
 
     await flutterWebView.launch(authUrl.toString());
+  }
 
-    return redditLogin;
+  Future logout(void Function(Reddit redditResponse) onLogin) async {
+    onLogin(await anonymousLogin());
+  }
+
+  void deleteLoginDetails() {
+    sharedPreferences.setString(credentialsKey, '');
+  }
+
+  void saveLoginDetails(String jsonCredentials) {
+    sharedPreferences.setString(credentialsKey, jsonCredentials);
+  }
+
+  String getLoginDetails() {
+    return sharedPreferences.getString(credentialsKey);
+  }
+
+  Future<Reddit> onAppOpenLogin() async {
+    var savedLoginCredentials = getLoginDetails();
+    if (savedLoginCredentials == null || savedLoginCredentials.isEmpty) {
+      return anonymousLogin();
+    } else {
+      Reddit client = Reddit.restoreAuthenticatedInstance(
+        savedLoginCredentials,
+        clientId: clientId,
+        userAgent: userAgent,
+        redirectUri: Uri.parse(redirectUri),
+      );
+
+      return client;
+    }
   }
 
   Future<Reddit> anonymousLogin() async {

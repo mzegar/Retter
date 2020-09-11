@@ -32,7 +32,7 @@ Future<void> main() async {
     ),
     home: MainPage(
       viewModel: MainPageViewModel(
-        reddit: await config.anonymousLogin(),
+        reddit: await config.onAppOpenLogin(),
         config: config,
       ),
     ),
@@ -94,17 +94,21 @@ class MainPage extends StatelessWidget {
             title: _buildTitle(),
           ),
           actions: [
-            CustomPopupMenu(
-              onTap: (popupMenuOptions optionSelected) async {
-                switch (optionSelected) {
-                  case popupMenuOptions.Login:
-                    break;
-                  case popupMenuOptions.Settings:
-                    // TODO: Handle this case.
-                    break;
-                }
-              },
-            ),
+            Observer(builder: (_) {
+              return CustomPopupMenu(
+                isLoggedIn: viewModel?.redditor != null,
+                onTap: (popupMenuOptions optionSelected) async {
+                  switch (optionSelected) {
+                    case popupMenuOptions.Login:
+                      await viewModel.login();
+                      break;
+                    case popupMenuOptions.Logout:
+                      await viewModel.logout();
+                      break;
+                  }
+                },
+              );
+            }),
           ],
         ),
         CupertinoSliverRefreshControl(

@@ -17,7 +17,6 @@ abstract class MainPageViewModelBase with Store {
   final ScrollController scrollController = ScrollController();
   final String defaultSubredditString = 'all';
   final int _numberOfPostsToFetch = 25;
-  Reddit reddit;
 
   MainPageViewModelBase({
     @required this.reddit,
@@ -25,6 +24,12 @@ abstract class MainPageViewModelBase with Store {
   }) {
     _initPage();
   }
+
+  @observable
+  Reddit reddit;
+
+  @observable
+  Redditor redditor;
 
   @observable
   String expandedPost;
@@ -67,6 +72,29 @@ abstract class MainPageViewModelBase with Store {
     savedSubs = ObservableList.of(config.deleteSubreddit(subredditToDelete));
   }
 
+  Future login() async {
+    if (redditor == null) {
+      await config.login((Reddit redditResponse) async {
+        if (redditResponse != null) {
+          reddit = redditResponse;
+          await getRedditor();
+        }
+      });
+    }
+  }
+
+  Future logout() async {
+    if (redditor != null) {
+      await config.logout((Reddit redditResponse) async {
+        if (redditResponse != null) {
+          reddit = redditResponse;
+          redditor = null;
+          config.deleteLoginDetails();
+        }
+      });
+    }
+  }
+
   Future refreshPosts() async {
     submissionContent.clear();
     loadedPostSuccessfully = true;
@@ -74,6 +102,8 @@ abstract class MainPageViewModelBase with Store {
   }
 
   void _initPage() async {
+    await getRedditor();
+
     _setDefaultSubreddit();
 
     changeToSubreddit(defaultSubredditString);
@@ -110,5 +140,13 @@ abstract class MainPageViewModelBase with Store {
         _getPosts(currentSubreddit);
       }
     });
+  }
+
+  Future getRedditor() async {
+    try {
+      redditor = await reddit.user.me();
+    } catch (e) {
+      // TODO: handle this error
+    }
   }
 }

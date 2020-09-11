@@ -9,6 +9,36 @@ part of 'mainpage_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$MainPageViewModel on MainPageViewModelBase, Store {
+  final _$redditAtom = Atom(name: 'MainPageViewModelBase.reddit');
+
+  @override
+  Reddit get reddit {
+    _$redditAtom.reportRead();
+    return super.reddit;
+  }
+
+  @override
+  set reddit(Reddit value) {
+    _$redditAtom.reportWrite(value, super.reddit, () {
+      super.reddit = value;
+    });
+  }
+
+  final _$redditorAtom = Atom(name: 'MainPageViewModelBase.redditor');
+
+  @override
+  Redditor get redditor {
+    _$redditorAtom.reportRead();
+    return super.redditor;
+  }
+
+  @override
+  set redditor(Redditor value) {
+    _$redditorAtom.reportWrite(value, super.redditor, () {
+      super.redditor = value;
+    });
+  }
+
   final _$expandedPostAtom = Atom(name: 'MainPageViewModelBase.expandedPost');
 
   @override
@@ -91,6 +121,8 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
   @override
   String toString() {
     return '''
+reddit: ${reddit},
+redditor: ${redditor},
 expandedPost: ${expandedPost},
 savedSubs: ${savedSubs},
 submissionContent: ${submissionContent},
