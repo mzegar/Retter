@@ -100,7 +100,7 @@ class Config {
     if (savedLoginCredentials == null || savedLoginCredentials.isEmpty) {
       return anonymousLogin();
     } else {
-      Reddit client = Reddit.restoreAuthenticatedInstance(
+      Reddit client = Reddit.restoreInstalledAuthenticatedInstance(
         savedLoginCredentials,
         clientId: clientId,
         userAgent: userAgent,

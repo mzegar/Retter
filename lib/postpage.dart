@@ -7,8 +7,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutterreddit/common/launchURL.dart';
-import 'package:flutterreddit/common/postIcon.dart';
+import 'package:flutterreddit/common/loadingPostIndicator.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
+
+import 'package:flutterreddit/common/subredditPost.dart';
 
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;
@@ -36,15 +38,23 @@ class PostPage extends StatelessWidget {
                 child: Text(viewModel.submission.title))),
         body: ListView(
           children: <Widget>[
-            _buildPost(context: context, submission: viewModel.submission),
+            SubredditPost(
+              context: context,
+              submissionData: viewModel.submission,
+              isViewingPost: true,
+              onTap: () {
+                launchURL(
+                  viewModel.submission.url.toString(),
+                );
+              },
+            ),
             if (viewModel.isSelfPost())
               _buildSelfText(
-                  context: context, submission: viewModel.submission),
-            Divider(
-              thickness: 2,
-            ),
+                context: context,
+                submission: viewModel.submission,
+              ),
             viewModel.loadingComments
-                ? _buildLoadingCommentsIndicator()
+                ? buildLoadingPostIndicator('Loading comments...')
                 : _buildComments(),
           ],
         ),
@@ -52,57 +62,17 @@ class PostPage extends StatelessWidget {
     });
   }
 
-  Widget _buildPost({BuildContext context, Submission submission}) {
-    return Padding(
-      padding: EdgeInsets.all(5),
-      child: GestureDetector(
-        onTap: () {
-          if (!submission.isSelf) {
-            launchURL(submission.url.toString());
-          }
-        },
-        child: Container(
-          color: Color(0xFF282828),
-          child: Padding(
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      SubredditPost.buildPostIcon(submission),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Text(submission.title),
-                        ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Text(submission.upvotes.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              )),
-        ),
-      ),
-    );
-  }
-
   Widget _buildSelfText({BuildContext context, Submission submission}) {
-    return Padding(
-      padding: EdgeInsets.all(5),
-      child: Container(
-        color: Color(0xFF282828),
-        child: Padding(
-          padding: EdgeInsets.all(5),
-          child: MarkdownBody(
-            data: submission.selftext,
-            onTapLink: (String url) {
-              launchURL(url);
-            },
-          ),
+    return Card(
+      margin: EdgeInsets.zero,
+      color: Color(0xFF282828),
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: MarkdownBody(
+          data: submission.selftext,
+          onTapLink: (String url) {
+            launchURL(url);
+          },
         ),
       ),
     );
@@ -130,7 +100,7 @@ class PostPage extends StatelessWidget {
           onTap: () {
             viewModel.unCollapseNestedComments(index);
           },
-          child: Container(
+          child: Card(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             color: Color(0xFF282828),
@@ -164,7 +134,7 @@ class PostPage extends StatelessWidget {
           onTap: () {
             viewModel.collapseNestedComments(index);
           },
-          child: Container(
+          child: Card(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             color: Color(0xFF282828),
@@ -204,21 +174,5 @@ class PostPage extends StatelessWidget {
         );
       }
     });
-  }
-
-  Widget _buildLoadingCommentsIndicator() {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text('Loading comments...'),
-          SizedBox(
-            width: 10,
-          ),
-          CupertinoActivityIndicator(),
-        ],
-      ),
-    );
   }
 }
