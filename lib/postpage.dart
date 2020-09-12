@@ -10,8 +10,6 @@ import 'package:flutterreddit/common/launchURL.dart';
 import 'package:flutterreddit/common/loadingPostIndicator.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
 
-import 'package:flutterreddit/common/subredditPost.dart';
-
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;
 
@@ -38,16 +36,6 @@ class PostPage extends StatelessWidget {
                 child: Text(viewModel.submission.title))),
         body: ListView(
           children: <Widget>[
-            SubredditPost(
-              context: context,
-              submissionData: viewModel.submission,
-              isViewingPost: true,
-              onTap: () {
-                launchURL(
-                  viewModel.submission.url.toString(),
-                );
-              },
-            ),
             if (viewModel.isSelfPost())
               _buildSelfText(
                 context: context,

@@ -38,6 +38,7 @@ dependencies:
   uuid: 2.2.2
   google_fonts: ^1.1.0
   eva_icons_flutter: ^2.0.1
+  transparent_image: ^1.0.0
 
 dev_dependencies:
   flutter_test:

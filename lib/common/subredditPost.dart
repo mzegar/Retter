@@ -3,6 +3,7 @@ import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class SubredditPost extends StatelessWidget {
   final BuildContext context;
@@ -79,7 +80,11 @@ class SubredditPost extends StatelessWidget {
       return CachedNetworkImage(
         imageUrl: image.url.toString(),
         fit: BoxFit.fitWidth,
-        placeholder: (context, url) => CircularProgressIndicator(),
+        placeholder: (context, url) => FadeInImage.memoryNetwork(
+          fadeInDuration: Duration(milliseconds: 200),
+          placeholder: kTransparentImage,
+          image: image.url.toString(),
+        ),
         errorWidget: (context, url, error) => Container(),
       );
     }
