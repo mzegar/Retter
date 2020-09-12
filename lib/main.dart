@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:draw/draw.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/common/launchURL.dart';
 import 'package:flutterreddit/common/popupMenu.dart';
-import 'package:flutterreddit/common/postIcon.dart';
 import 'package:flutterreddit/common/config.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterreddit/mainpage_viewmodel.dart';
@@ -77,9 +78,12 @@ class MainPage extends StatelessWidget {
 
   Widget _buildTitle() {
     return Observer(builder: (_) {
-      return Text(viewModel.currentSubreddit != null
-          ? viewModel.currentSubreddit.displayName
-          : viewModel.defaultSubredditString);
+      return Text(
+        viewModel.currentSubreddit != null
+            ? viewModel.currentSubreddit.displayName
+            : viewModel.defaultSubredditString,
+        style: GoogleFonts.poppins(),
+      );
     });
   }
 
@@ -112,6 +116,30 @@ class MainPage extends StatelessWidget {
           ],
         ),
         CupertinoSliverRefreshControl(
+          builder: (
+            BuildContext context,
+            RefreshIndicatorMode refreshState,
+            double pulledExtent,
+            double refreshTriggerPullDistance,
+            double refreshIndicatorExtent,
+          ) {
+            if (pulledExtent < 10) {
+              return Container();
+            }
+            switch (refreshState) {
+              case RefreshIndicatorMode.inactive:
+              case RefreshIndicatorMode.done:
+              case RefreshIndicatorMode.armed:
+              case RefreshIndicatorMode.refresh:
+                return Container();
+                break;
+              case RefreshIndicatorMode.drag:
+                return Icon(EvaIcons.arrowIosUpward);
+                break;
+            }
+
+            return Container();
+          },
           onRefresh: () async {
             viewModel.refreshPosts();
           },
@@ -139,89 +167,59 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildPost({BuildContext context, Submission submission}) {
-    return Observer(builder: (_) {
-      var isExpanded = viewModel.expandedPost == submission.id;
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        child: Container(
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: Card(
+          margin: EdgeInsets.zero,
           color: Color(0xFF282828),
-          child: Padding(
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      if (submission.isSelf) {
-                        viewModel.goToPostPage(context, submission);
-                      } else {
-                        launchURL(submission.url.toString());
-                      }
-                    },
-                    onDoubleTap: () {
-                      viewModel.expandedPost = submission.id;
-                    },
-                    child: Column(
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  if (submission.isSelf) {
+                    viewModel.goToPostPage(context, submission);
+                  } else {
+                    launchURL(submission.url.toString());
+                  }
+                },
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        submission.isSelf
-                            ? Container()
-                            : _buildPostThumbnail(submission.preview),
-                        Row(
-                          children: <Widget>[
-                            SubredditPost.buildPostIcon(submission),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Text(submission.title),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              submission.title,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 0, top: 10, bottom: 10),
-                              child: Column(
-                                children: <Widget>[
-                                  Text(submission.upvotes.toString()),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  isExpanded
-                      ? SizedBox(
-                          height: 10,
-                        )
-                      : SizedBox(),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    height: isExpanded ? 30 : 0,
-                    curve: Curves.fastOutSlowIn,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text(
-                          submission.author,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            viewModel.goToPostPage(context, submission);
-                          },
-                          child: Text(
-                            'Comments',
-                            style: TextStyle(color: Colors.blue),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              )),
-        ),
-      );
-    });
+                    submission.isSelf
+                        ? Container()
+                        : _buildPostThumbnail(submission.preview),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: Icon(EvaIcons.messageSquareOutline),
+                          onPressed: () {
+                            viewModel.goToPostPage(context, submission);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
   }
 
   Widget _buildLoadingPostIndicator() {
@@ -230,11 +228,18 @@ class MainPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Loading posts...'),
+          Text(
+            'Loading posts...',
+            style: GoogleFonts.poppins(),
+          ),
           SizedBox(
             width: 10,
           ),
-          CupertinoActivityIndicator(),
+          Container(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(),
+          ),
         ],
       ),
     );
@@ -243,17 +248,11 @@ class MainPage extends StatelessWidget {
   Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
-      return Container(
-        child: Padding(
-          padding: EdgeInsets.all(5.0),
-          child: CachedNetworkImage(
-              imageUrl: image.url.toString(),
-              fit: BoxFit.fitWidth,
-              placeholder: (context, url) => CupertinoActivityIndicator(
-                    radius: 20,
-                  ),
-              errorWidget: (context, url, error) => Container()),
-        ),
+      return CachedNetworkImage(
+        imageUrl: image.url.toString(),
+        fit: BoxFit.fitWidth,
+        placeholder: (context, url) => CircularProgressIndicator(),
+        errorWidget: (context, url, error) => Container(),
       );
     }
     return Container();

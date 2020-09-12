@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum popupMenuOptions { Login, Logout }
 
@@ -24,8 +25,12 @@ class CustomPopupMenu extends StatelessWidget {
         return _options.map((option) {
           return PopupMenuItem(
             value: option,
-            child: Text(
-              option.toString().split('.').last,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Text(
+                option.toString().split('.').last,
+                style: GoogleFonts.poppins(),
+              ),
             ),
           );
         }).toList();

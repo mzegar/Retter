@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SubDrawer extends StatelessWidget {
   final void Function(String enteredText) onSubmitted;
@@ -34,6 +35,7 @@ class SubDrawer extends StatelessWidget {
                     borderSide: BorderSide(color: Colors.blue, width: 2.0),
                   ),
                   hintText: 'Enter a subreddit',
+                  hintStyle: GoogleFonts.poppins(),
                 ),
               ),
             ),
@@ -58,7 +60,10 @@ class SubDrawer extends StatelessWidget {
 
   Widget _buildSavedSub(String title) {
     return ListTile(
-      title: Text(title),
+      title: Text(
+        title,
+        style: GoogleFonts.poppins(),
+      ),
       trailing: IconButton(
         icon: Icon(Icons.remove),
         onPressed: () {
