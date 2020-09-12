@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutterreddit/common/launchURL.dart';
 import 'package:flutterreddit/common/loadingPostIndicator.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
+import 'package:flutterreddit/common/subredditPost.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PostPage extends StatelessWidget {
@@ -32,12 +32,26 @@ class PostPage extends StatelessWidget {
           title: Align(
             alignment:
                 Platform.isAndroid ? Alignment.centerLeft : Alignment.center,
-            child: Text(viewModel.submission.title),
+            child: Text(
+              viewModel.submission.title,
+              style: GoogleFonts.poppins(),
+            ),
           ),
         ),
         body: ListView(
           children: <Widget>[
-            _buildPost(),
+            SubredditPost(
+              context: context,
+              submissionData: viewModel.submission,
+              isViewingPost: true,
+              selfText:
+                  viewModel.isSelfPost() ? viewModel.submission.selftext : '',
+              onTap: () async {
+                if (!viewModel.submission.isSelf) {
+                  await launchURL(viewModel.submission.url.toString());
+                }
+              },
+            ),
             viewModel.loadingComments
                 ? buildLoadingPostIndicator('Loading comments...')
                 : _buildComments(),
@@ -45,46 +59,6 @@ class PostPage extends StatelessWidget {
         ),
       );
     });
-  }
-
-  Widget _buildPost() {
-    return GestureDetector(
-      onTap: () {
-        if (!viewModel.submission.isSelf) {
-          launchURL(viewModel.submission.url.toString());
-        }
-      },
-      child: Card(
-        margin: EdgeInsets.zero,
-        color: Color(0xFF282828),
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  viewModel.submission.title,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                if (viewModel.isSelfPost()) Divider(),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: MarkdownBody(
-                    data: viewModel.submission.selftext,
-                    onTapLink: (String url) {
-                      launchURL(url);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _buildComments() {
@@ -127,9 +101,9 @@ class PostPage extends StatelessWidget {
                       ),
                       Text(
                         comment.commentData.author,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -162,9 +136,9 @@ class PostPage extends StatelessWidget {
                       ),
                       Text(
                         comment.commentData.author,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -172,11 +146,11 @@ class PostPage extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  MarkdownBody(
-                    data: comment.commentData.body,
-                    onTapLink: (String url) {
-                      launchURL(url);
-                    },
+                  Text(
+                    comment.commentData.body,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),

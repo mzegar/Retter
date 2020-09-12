@@ -9,15 +9,19 @@ class SubredditPost extends StatelessWidget {
   final BuildContext context;
   final Submission submissionData;
   final bool isViewingPost;
+  final bool isLoggedIn;
   final void Function() onTap;
   final void Function() onCommentTap;
+  final String selfText;
 
   const SubredditPost({
     this.context,
     this.submissionData,
     this.isViewingPost,
+    this.isLoggedIn,
     this.onTap,
     this.onCommentTap,
+    this.selfText,
   });
 
   @override
@@ -34,39 +38,55 @@ class SubredditPost extends StatelessWidget {
                   if (onTap != null) onTap();
                 },
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              submissionData.title,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w400,
-                              ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            submissionData.title,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
-                        ),
-                      ],
+                          Text(
+                            submissionData.author,
+                            style: GoogleFonts.poppins(
+                              color: Colors.blueGrey,
+                              fontSize: 11,
+                            ),
+                          ),
+                          Text(
+                            '${submissionData.numComments.toString()} comments  •  ${submissionData.subreddit.displayName}',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white60,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    submissionData.isSelf
+                    submissionData.isSelf || isViewingPost
                         ? Container()
                         : _buildPostThumbnail(submissionData.preview),
-                    if (!isViewingPost)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        if (!isViewingPost)
                           IconButton(
-                            icon: Icon(EvaIcons.messageSquareOutline),
+                            icon: Icon(
+                              EvaIcons.messageSquareOutline,
+                            ),
                             onPressed: () {
                               if (onCommentTap != null) onCommentTap();
                             },
                           ),
-                        ],
-                      ),
+                      ],
+                    ),
+                    if (selfText != null && selfText.isNotEmpty)
+                      _buildSelfText(),
                   ],
                 ),
               ),
@@ -90,13 +110,26 @@ class SubredditPost extends StatelessWidget {
           );
         },
         placeholder: (context, url) => FadeInImage.memoryNetwork(
-          fadeInDuration: Duration(milliseconds: 200),
+          fadeInDuration: Duration(milliseconds: 300),
           placeholder: kTransparentImage,
           image: image.url.toString(),
+          fit: BoxFit.fitWidth,
         ),
         errorWidget: (context, url, error) => Container(),
       );
     }
     return Container();
+  }
+
+  Widget _buildSelfText() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        submissionData.selftext,
+        style: GoogleFonts.poppins(
+          fontSize: 13,
+        ),
+      ),
+    );
   }
 }

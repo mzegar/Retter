@@ -122,7 +122,7 @@ class MainPage extends StatelessWidget {
             double refreshTriggerPullDistance,
             double refreshIndicatorExtent,
           ) {
-            if (pulledExtent < 10) {
+            if (pulledExtent < 15) {
               return Container();
             }
             switch (refreshState) {
@@ -162,6 +162,7 @@ class MainPage extends StatelessWidget {
               context: context,
               submissionData: submissionData,
               isViewingPost: false,
+              isLoggedIn: viewModel?.redditor != null,
               onTap: () {
                 if (submissionData.isSelf) {
                   viewModel.goToPostPage(context, submissionData);
