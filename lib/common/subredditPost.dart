@@ -34,6 +34,7 @@ class SubredditPost extends StatelessWidget {
                   if (onTap != null) onTap();
                 },
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Row(
                       mainAxisSize: MainAxisSize.max,
@@ -79,7 +80,15 @@ class SubredditPost extends StatelessWidget {
       var image = thumbnails.first.resolutions.last;
       return CachedNetworkImage(
         imageUrl: image.url.toString(),
-        fit: BoxFit.fitWidth,
+        imageBuilder: (BuildContext context, ImageProvider imageProvider) {
+          return Container(
+            width: double.infinity,
+            child: Image.network(
+              image.url.toString(),
+              fit: BoxFit.fitWidth,
+            ),
+          );
+        },
         placeholder: (context, url) => FadeInImage.memoryNetwork(
           fadeInDuration: Duration(milliseconds: 200),
           placeholder: kTransparentImage,
