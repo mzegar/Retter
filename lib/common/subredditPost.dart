@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -102,24 +101,12 @@ class SubredditPost extends StatelessWidget {
   Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
-      return CachedNetworkImage(
-        imageUrl: image.url.toString(),
-        imageBuilder: (BuildContext context, ImageProvider imageProvider) {
-          return Container(
-            width: double.infinity,
-            child: Image.network(
-              image.url.toString(),
-              fit: BoxFit.fitWidth,
-            ),
-          );
-        },
-        placeholder: (context, url) => FadeInImage.memoryNetwork(
-          fadeInDuration: Duration(milliseconds: 300),
-          placeholder: kTransparentImage,
-          image: image.url.toString(),
-          fit: BoxFit.fitWidth,
-        ),
-        errorWidget: (context, url, error) => Container(),
+      return FadeInImage.memoryNetwork(
+        fadeInDuration: Duration(milliseconds: 200),
+        placeholder: kTransparentImage,
+        image: image.url.toString(),
+        width: double.maxFinite,
+        fit: BoxFit.fitWidth,
       );
     }
     return Container();
