@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterreddit/common/launchURL.dart';
@@ -23,15 +22,14 @@ class PostPage extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
-              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+              Icons.arrow_back_ios,
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: Align(
-            alignment:
-                Platform.isAndroid ? Alignment.centerLeft : Alignment.center,
+            alignment: Alignment.center,
             child: Text(
               viewModel.submission.title,
               style: GoogleFonts.poppins(),
@@ -102,8 +100,9 @@ class PostPage extends StatelessWidget {
                       Text(
                         comment.commentData.author,
                         style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.w300,
+                          fontSize: 13,
                         ),
                       ),
                     ],
@@ -118,9 +117,7 @@ class PostPage extends StatelessWidget {
           onTap: () {
             viewModel.collapseNestedComments(index);
           },
-          child: Card(
-            elevation: 0,
-            color: Colors.transparent,
+          child: Container(
             margin:
                 EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             child: Padding(
@@ -137,20 +134,32 @@ class PostPage extends StatelessWidget {
                       Text(
                         comment.commentData.author,
                         style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.w300,
+                          fontSize: 13,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    comment.commentData.body,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
+                  MarkdownBody(
+                    styleSheet: MarkdownStyleSheet(
+                      p: GoogleFonts.poppins(
+                        fontSize: 12,
+                      ),
+                      h1: GoogleFonts.poppins(
+                        fontSize: 13,
+                      ),
+                      h2: GoogleFonts.poppins(
+                        fontSize: 14,
+                      ),
+                      h3: GoogleFonts.poppins(
+                        fontSize: 15,
+                      ),
                     ),
+                    data: comment.commentData.body,
+                    onTapLink: (String url) async {
+                      await launchURL(url);
+                    },
                   ),
                 ],
               ),

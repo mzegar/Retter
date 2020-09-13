@@ -2,8 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutterreddit/common/launchURL.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:markdown/markdown.dart' as md;
 
 class SubredditPost extends StatelessWidget {
   final BuildContext context;
@@ -59,7 +63,7 @@ class SubredditPost extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${submissionData.numComments.toString()} comments  •  ${submissionData.subreddit.displayName}',
+                            '${NumberFormat.compact().format(submissionData.upvotes)} upvotes  •  ${submissionData.numComments.toString()} comments  •  ${submissionData.subreddit.displayName}',
                             style: GoogleFonts.poppins(
                               color: Colors.white60,
                               fontSize: 11,
@@ -122,13 +126,31 @@ class SubredditPost extends StatelessWidget {
   }
 
   Widget _buildSelfText() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: Text(
-        submissionData.selftext,
-        style: GoogleFonts.poppins(
-          fontSize: 13,
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: MarkdownBody(
+        styleSheet: MarkdownStyleSheet(
+          p: GoogleFonts.poppins(
+            fontSize: 13,
+          ),
+          h1: GoogleFonts.poppins(
+            fontSize: 16,
+          ),
+          h2: GoogleFonts.poppins(
+            fontSize: 19,
+          ),
+          h3: GoogleFonts.poppins(
+            fontSize: 22,
+          ),
         ),
+        data: submissionData.selftext,
+        extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
+          md.EmojiSyntax(),
+          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+        ]),
+        onTapLink: (String url) async {
+          await launchURL(url);
+        },
       ),
     );
   }

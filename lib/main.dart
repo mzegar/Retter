@@ -133,7 +133,10 @@ class MainPage extends StatelessWidget {
                 return Container();
                 break;
               case RefreshIndicatorMode.drag:
-                return Icon(EvaIcons.arrowIosUpward);
+                return Icon(
+                  EvaIcons.arrowIosUpwardOutline,
+                  size: pulledExtent * 0.5,
+                );
                 break;
             }
 
@@ -163,11 +166,11 @@ class MainPage extends StatelessWidget {
               submissionData: submissionData,
               isViewingPost: false,
               isLoggedIn: viewModel?.redditor != null,
-              onTap: () {
+              onTap: () async {
                 if (submissionData.isSelf) {
                   viewModel.goToPostPage(context, submissionData);
                 } else {
-                  launchURL(submissionData.url.toString());
+                  await launchURL(submissionData.url.toString());
                 }
               },
               onCommentTap: () {

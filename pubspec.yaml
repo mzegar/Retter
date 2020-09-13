@@ -38,6 +38,8 @@ dependencies:
   google_fonts: ^1.1.0
   eva_icons_flutter: ^2.0.1
   transparent_image: ^1.0.0
+  intl: ^0.15.6
+  flutter_markdown: ^0.4.4
 
 dev_dependencies:
   flutter_test:

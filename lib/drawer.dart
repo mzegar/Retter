@@ -29,10 +29,10 @@ class SubDrawer extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
                   ),
                   hintText: 'Enter a subreddit',
                   hintStyle: GoogleFonts.poppins(),

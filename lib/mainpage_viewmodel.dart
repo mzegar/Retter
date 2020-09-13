@@ -2,7 +2,6 @@ import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterreddit/postpage.dart';
-import 'package:flutterreddit/common/routeTransition.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
@@ -49,8 +48,8 @@ abstract class MainPageViewModelBase with Store {
   void goToPostPage(BuildContext context, Submission submission) {
     Navigator.push(
       context,
-      SlideRightRoute(
-        page: PostPage(
+      MaterialPageRoute(
+        builder: (BuildContext context) => PostPage(
           viewModel: PostPageViewModel(submission: submission),
         ),
       ),
