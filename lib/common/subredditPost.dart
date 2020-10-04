@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:markdown/markdown.dart' as md;
 
-class SubredditPost extends StatelessWidget {
+class SubredditPost extends StatefulWidget {
   final BuildContext context;
   final Submission submissionData;
   final bool isViewingPost;
@@ -26,6 +26,13 @@ class SubredditPost extends StatelessWidget {
     this.onCommentTap,
     this.selfText,
   });
+  @override
+  _SubredditPostState createState() => _SubredditPostState();
+}
+
+class _SubredditPostState extends State<SubredditPost> {
+  bool upvoted = false;
+  bool downvoted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,7 @@ class SubredditPost extends StatelessWidget {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  if (onTap != null) onTap();
+                  if (widget.onTap != null) widget.onTap();
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,20 +56,20 @@ class SubredditPost extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            submissionData.title,
+                            widget.submissionData.title,
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           Text(
-                            submissionData.author,
+                            widget.submissionData.author,
                             style: GoogleFonts.poppins(
                               color: Colors.blueGrey,
                               fontSize: 11,
                             ),
                           ),
                           Text(
-                            '${NumberFormat.compact().format(submissionData.upvotes)} upvotes  •  ${submissionData.numComments.toString()} comments  •  ${submissionData.subreddit.displayName}',
+                            '${NumberFormat.compact().format(widget.submissionData.upvotes)} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
                             style: GoogleFonts.poppins(
                               color: Colors.white60,
                               fontSize: 11,
@@ -71,24 +78,57 @@ class SubredditPost extends StatelessWidget {
                         ],
                       ),
                     ),
-                    submissionData.isSelf || isViewingPost
+                    widget.submissionData.isSelf || widget.isViewingPost
                         ? Container()
-                        : _buildPostThumbnail(submissionData.preview),
+                        : _buildPostThumbnail(widget.submissionData.preview),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        if (!isViewingPost)
+                        if (!widget.isViewingPost)
                           IconButton(
                             icon: Icon(
                               EvaIcons.messageSquareOutline,
                             ),
                             onPressed: () {
-                              if (onCommentTap != null) onCommentTap();
+                              if (widget.onCommentTap != null)
+                                widget.onCommentTap();
+                            },
+                          ),
+                        if (widget.isLoggedIn != null &&
+                            widget.isLoggedIn &&
+                            !widget.isViewingPost)
+                          IconButton(
+                            icon: Icon(
+                              EvaIcons.arrowUp,
+                              color: widget.submissionData.vote ==
+                                          VoteState.upvoted ||
+                                      upvoted
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                            onPressed: () {
+                              _upvote();
+                            },
+                          ),
+                        if (widget.isLoggedIn != null &&
+                            widget.isLoggedIn &&
+                            !widget.isViewingPost)
+                          IconButton(
+                            icon: Icon(
+                              EvaIcons.arrowDown,
+                              color: widget.submissionData.vote ==
+                                          VoteState.downvoted ||
+                                      downvoted
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                            onPressed: () {
+                              _downvote();
                             },
                           ),
                       ],
                     ),
-                    if (selfText != null && selfText.isNotEmpty)
+                    if (widget.selfText != null && widget.selfText.isNotEmpty)
                       _buildSelfText(),
                   ],
                 ),
@@ -96,6 +136,22 @@ class SubredditPost extends StatelessWidget {
             ],
           )),
     );
+  }
+
+  Future<void> _upvote() async {
+    await widget.submissionData.upvote();
+    setState(() {
+      upvoted = true;
+      downvoted = false;
+    });
+  }
+
+  void _downvote() async {
+    await widget.submissionData.downvote();
+    setState(() {
+      downvoted = true;
+      upvoted = false;
+    });
   }
 
   Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
@@ -130,7 +186,7 @@ class SubredditPost extends StatelessWidget {
             fontSize: 22,
           ),
         ),
-        data: submissionData.selftext,
+        data: widget.submissionData.selftext,
         extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
           md.EmojiSyntax(),
           ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
