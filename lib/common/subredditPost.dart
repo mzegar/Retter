@@ -31,8 +31,7 @@ class SubredditPost extends StatefulWidget {
 }
 
 class _SubredditPostState extends State<SubredditPost> {
-  bool upvoted = false;
-  bool downvoted = false;
+  VoteState voteStatus = VoteState.none;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +68,7 @@ class _SubredditPostState extends State<SubredditPost> {
                             ),
                           ),
                           Text(
-                            '${NumberFormat.compact().format(widget.submissionData.upvotes)} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
+                            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
                             style: GoogleFonts.poppins(
                               color: Colors.white60,
                               fontSize: 11,
@@ -94,36 +93,32 @@ class _SubredditPostState extends State<SubredditPost> {
                                 widget.onCommentTap();
                             },
                           ),
-                        if (widget.isLoggedIn != null &&
-                            widget.isLoggedIn &&
-                            !widget.isViewingPost)
+                        if (!widget.isViewingPost && widget.isLoggedIn)
                           IconButton(
                             icon: Icon(
                               EvaIcons.arrowUp,
                               color: widget.submissionData.vote ==
                                           VoteState.upvoted ||
-                                      upvoted
+                                      voteStatus == VoteState.upvoted
                                   ? Colors.red
                                   : Colors.white,
                             ),
                             onPressed: () {
-                              _upvote();
+                              _upVote();
                             },
                           ),
-                        if (widget.isLoggedIn != null &&
-                            widget.isLoggedIn &&
-                            !widget.isViewingPost)
+                        if (!widget.isViewingPost && widget.isLoggedIn)
                           IconButton(
                             icon: Icon(
                               EvaIcons.arrowDown,
                               color: widget.submissionData.vote ==
                                           VoteState.downvoted ||
-                                      downvoted
+                                      voteStatus == VoteState.downvoted
                                   ? Colors.red
                                   : Colors.white,
                             ),
                             onPressed: () {
-                              _downvote();
+                              _downVote();
                             },
                           ),
                       ],
@@ -138,19 +133,17 @@ class _SubredditPostState extends State<SubredditPost> {
     );
   }
 
-  Future<void> _upvote() async {
+  Future<void> _upVote() async {
     await widget.submissionData.upvote();
     setState(() {
-      upvoted = true;
-      downvoted = false;
+      voteStatus = VoteState.upvoted;
     });
   }
 
-  void _downvote() async {
+  Future<void> _downVote() async {
     await widget.submissionData.downvote();
     setState(() {
-      downvoted = true;
-      upvoted = false;
+      voteStatus = VoteState.downvoted;
     });
   }
 
