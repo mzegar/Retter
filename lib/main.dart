@@ -155,7 +155,7 @@ class MainPage extends StatelessWidget {
     return Observer(builder: (_) {
       return SliverList(
         delegate: SliverChildListDelegate(
-          List.generate(viewModel.submissionContent.length, (index) {
+          List.generate(viewModel.submissionContent.length + 1, (index) {
             if (index == viewModel.submissionContent.length) {
               return buildLoadingPostIndicator('Loading posts...');
             }
