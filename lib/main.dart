@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutterreddit/common/PopupDialog.dart';
 import 'package:flutterreddit/common/loadingPostIndicator.dart';
 import 'package:flutterreddit/common/popupMenu.dart';
 import 'package:flutterreddit/common/config.dart';
@@ -176,10 +178,32 @@ class MainPage extends StatelessWidget {
               onCommentTap: () {
                 viewModel.goToPostPage(context, submissionData);
               },
+              onLongPress: () {
+                _copyUrl(submissionData, context);
+              },
             );
           }),
         ),
       );
     });
+  }
+
+  void _copyUrl(Submission submissionData, BuildContext context) {
+    Clipboard.setData(ClipboardData(text: submissionData.url.toString()));
+    _notifyUser(context);
+  }
+
+  _notifyUser(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          Future.delayed(
+            Duration(seconds: 1),
+            () {
+              Navigator.of(context).pop(true);
+            },
+          );
+          return PopupDialog(text: "Url copied to clipboard");
+        });
   }
 }

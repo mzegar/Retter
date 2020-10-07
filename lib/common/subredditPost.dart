@@ -15,6 +15,7 @@ class SubredditPost extends StatefulWidget {
   final bool isLoggedIn;
   final void Function() onTap;
   final void Function() onCommentTap;
+  final void Function() onLongPress;
   final String selfText;
 
   const SubredditPost({
@@ -25,6 +26,7 @@ class SubredditPost extends StatefulWidget {
     this.onTap,
     this.onCommentTap,
     this.selfText,
+    this.onLongPress,
   });
   @override
   _SubredditPostState createState() => _SubredditPostState();
@@ -46,6 +48,9 @@ class _SubredditPostState extends State<SubredditPost> {
               GestureDetector(
                 onTap: () {
                   if (widget.onTap != null) widget.onTap();
+                },
+                onLongPress: () {
+                  if (widget.onLongPress != null) widget.onLongPress();
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
