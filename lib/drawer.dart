@@ -35,7 +35,7 @@ class SubDrawer extends StatelessWidget {
                     borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
                   ),
                   hintText: 'Enter a subreddit',
-                  hintStyle: GoogleFonts.poppins(),
+                  hintStyle: GoogleFonts.inter(),
                 ),
               ),
             ),
@@ -62,7 +62,7 @@ class SubDrawer extends StatelessWidget {
     return ListTile(
       title: Text(
         title,
-        style: GoogleFonts.poppins(),
+        style: GoogleFonts.inter(),
       ),
       trailing: IconButton(
         icon: Icon(Icons.remove),

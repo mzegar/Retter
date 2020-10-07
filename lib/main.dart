@@ -81,7 +81,7 @@ class MainPage extends StatelessWidget {
         viewModel.currentSubreddit != null
             ? viewModel.currentSubreddit.displayName
             : viewModel.defaultSubredditString,
-        style: GoogleFonts.poppins(),
+        style: GoogleFonts.inter(),
       );
     });
   }
@@ -155,7 +155,7 @@ class MainPage extends StatelessWidget {
     return Observer(builder: (_) {
       return SliverList(
         delegate: SliverChildListDelegate(
-          List.generate(viewModel.submissionContent.length + 1, (index) {
+          List.generate(viewModel.submissionContent.length, (index) {
             if (index == viewModel.submissionContent.length) {
               return buildLoadingPostIndicator('Loading posts...');
             }
