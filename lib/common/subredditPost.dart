@@ -156,6 +156,7 @@ class _SubredditPostState extends State<SubredditPost> {
         image: image.url.toString(),
         width: double.maxFinite,
         fit: BoxFit.fitWidth,
+        height: (image.height.toDouble() / image.width.toDouble()) * MediaQuery.of(context).size.width,
       );
     }
     return Container();
