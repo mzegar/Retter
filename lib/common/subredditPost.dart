@@ -35,6 +35,7 @@ class _SubredditPostState extends State<SubredditPost> {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Card(
@@ -56,20 +57,20 @@ class _SubredditPostState extends State<SubredditPost> {
                         children: [
                           Text(
                             widget.submissionData.title,
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           Text(
                             widget.submissionData.author,
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               color: Colors.blueGrey,
                               fontSize: 11,
                             ),
                           ),
                           Text(
                             '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               color: Colors.white60,
                               fontSize: 11,
                             ),
@@ -79,7 +80,8 @@ class _SubredditPostState extends State<SubredditPost> {
                     ),
                     widget.submissionData.isSelf || widget.isViewingPost
                         ? Container()
-                        : _buildPostThumbnail(widget.submissionData.preview),
+                        : _buildPostThumbnail(
+                            widget.submissionData.preview, screenWidth),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -96,7 +98,7 @@ class _SubredditPostState extends State<SubredditPost> {
                         if (!widget.isViewingPost && widget.isLoggedIn)
                           IconButton(
                             icon: Icon(
-                              EvaIcons.arrowUp,
+                              Icons.keyboard_arrow_up,
                               color: widget.submissionData.vote ==
                                           VoteState.upvoted ||
                                       voteStatus == VoteState.upvoted
@@ -110,7 +112,7 @@ class _SubredditPostState extends State<SubredditPost> {
                         if (!widget.isViewingPost && widget.isLoggedIn)
                           IconButton(
                             icon: Icon(
-                              EvaIcons.arrowDown,
+                              Icons.keyboard_arrow_down,
                               color: widget.submissionData.vote ==
                                           VoteState.downvoted ||
                                       voteStatus == VoteState.downvoted
@@ -134,29 +136,31 @@ class _SubredditPostState extends State<SubredditPost> {
   }
 
   Future<void> _upVote() async {
-    await widget.submissionData.upvote();
+    // TODO: Setup API call such that it cant be spammed
     setState(() {
       voteStatus = VoteState.upvoted;
     });
   }
 
   Future<void> _downVote() async {
-    await widget.submissionData.downvote();
+    // TODO: Setup API call such that it cant be spammed
     setState(() {
       voteStatus = VoteState.downvoted;
     });
   }
 
-  Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails) {
+  Widget _buildPostThumbnail(
+      List<SubmissionPreview> thumbnails, double screenWidth) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
+      var imageResolution = image.height / image.width;
       return FadeInImage.memoryNetwork(
         fadeInDuration: Duration(milliseconds: 200),
         placeholder: kTransparentImage,
         image: image.url.toString(),
-        width: double.maxFinite,
+        width: screenWidth,
         fit: BoxFit.fitWidth,
-        height: (image.height.toDouble() / image.width.toDouble()) * MediaQuery.of(context).size.width,
+        height: imageResolution * screenWidth,
       );
     }
     return Container();
@@ -167,16 +171,16 @@ class _SubredditPostState extends State<SubredditPost> {
       padding: EdgeInsets.all(10),
       child: MarkdownBody(
         styleSheet: MarkdownStyleSheet(
-          p: GoogleFonts.poppins(
+          p: GoogleFonts.inter(
             fontSize: 13,
           ),
-          h1: GoogleFonts.poppins(
+          h1: GoogleFonts.inter(
             fontSize: 16,
           ),
-          h2: GoogleFonts.poppins(
+          h2: GoogleFonts.inter(
             fontSize: 19,
           ),
-          h3: GoogleFonts.poppins(
+          h3: GoogleFonts.inter(
             fontSize: 22,
           ),
         ),

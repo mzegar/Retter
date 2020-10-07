@@ -9,7 +9,7 @@ Widget buildLoadingPostIndicator(String text) {
       children: <Widget>[
         Text(
           text,
-          style: GoogleFonts.poppins(),
+          style: GoogleFonts.inter(),
         ),
         SizedBox(
           width: 10,

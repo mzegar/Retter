@@ -32,7 +32,7 @@ class PostPage extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               viewModel.submission.title,
-              style: GoogleFonts.poppins(),
+              style: GoogleFonts.inter(),
             ),
           ),
         ),
@@ -99,7 +99,7 @@ class PostPage extends StatelessWidget {
                       ),
                       Text(
                         comment.commentData.author,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           color: Colors.blueGrey,
                           fontWeight: FontWeight.w300,
                           fontSize: 13,
@@ -133,7 +133,7 @@ class PostPage extends StatelessWidget {
                       ),
                       Text(
                         comment.commentData.author,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           color: Colors.blueGrey,
                           fontWeight: FontWeight.w300,
                           fontSize: 13,
@@ -143,16 +143,16 @@ class PostPage extends StatelessWidget {
                   ),
                   MarkdownBody(
                     styleSheet: MarkdownStyleSheet(
-                      p: GoogleFonts.poppins(
+                      p: GoogleFonts.inter(
                         fontSize: 12,
                       ),
-                      h1: GoogleFonts.poppins(
+                      h1: GoogleFonts.inter(
                         fontSize: 13,
                       ),
-                      h2: GoogleFonts.poppins(
+                      h2: GoogleFonts.inter(
                         fontSize: 14,
                       ),
-                      h3: GoogleFonts.poppins(
+                      h3: GoogleFonts.inter(
                         fontSize: 15,
                       ),
                     ),

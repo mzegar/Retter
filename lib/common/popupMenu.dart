@@ -29,7 +29,7 @@ class CustomPopupMenu extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Text(
                 option.toString().split('.').last,
-                style: GoogleFonts.poppins(),
+                style: GoogleFonts.inter(),
               ),
             ),
           );
