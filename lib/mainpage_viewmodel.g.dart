@@ -118,6 +118,23 @@ mixin _$MainPageViewModel on MainPageViewModelBase, Store {
     });
   }
 
+  final _$hasLoadedAllAvailablePostsAtom =
+      Atom(name: 'MainPageViewModelBase.hasLoadedAllAvailablePosts');
+
+  @override
+  bool get hasLoadedAllAvailablePosts {
+    _$hasLoadedAllAvailablePostsAtom.reportRead();
+    return super.hasLoadedAllAvailablePosts;
+  }
+
+  @override
+  set hasLoadedAllAvailablePosts(bool value) {
+    _$hasLoadedAllAvailablePostsAtom
+        .reportWrite(value, super.hasLoadedAllAvailablePosts, () {
+      super.hasLoadedAllAvailablePosts = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
@@ -127,7 +144,8 @@ expandedPost: ${expandedPost},
 savedSubs: ${savedSubs},
 submissionContent: ${submissionContent},
 currentSubreddit: ${currentSubreddit},
-loadedPostSuccessfully: ${loadedPostSuccessfully}
+loadedPostSuccessfully: ${loadedPostSuccessfully},
+hasLoadedAllAvailablePosts: ${hasLoadedAllAvailablePosts}
     ''';
   }
 }

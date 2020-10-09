@@ -45,6 +45,9 @@ abstract class MainPageViewModelBase with Store {
   @observable
   bool loadedPostSuccessfully = true;
 
+  @observable
+  bool hasLoadedAllAvailablePosts = false;
+
   void goToPostPage(BuildContext context, Submission submission) {
     Navigator.push(
       context,
@@ -59,6 +62,7 @@ abstract class MainPageViewModelBase with Store {
   void changeToSubreddit(String subredditTextField) async {
     submissionContent.clear();
     currentSubreddit = reddit.subreddit(subredditTextField);
+    hasLoadedAllAvailablePosts = false;
 
     loadedPostSuccessfully = true;
     loadedPostSuccessfully = await _getPosts(currentSubreddit);
@@ -96,6 +100,7 @@ abstract class MainPageViewModelBase with Store {
 
   Future refreshPosts() async {
     submissionContent.clear();
+    hasLoadedAllAvailablePosts = false;
     loadedPostSuccessfully = true;
     loadedPostSuccessfully = await _getPosts(currentSubreddit);
   }
@@ -115,27 +120,32 @@ abstract class MainPageViewModelBase with Store {
   }
 
   Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {
-    try {
-      var subreddit = subredditToFetchFrom.hot(
-          after: submissionContent.isNotEmpty
-              ? submissionContent.last.fullname
-              : null,
-          limit: _numberOfPostsToFetch);
+    if (!hasLoadedAllAvailablePosts)
+      try {
+        var subreddit = subredditToFetchFrom.hot(
+            after: submissionContent.isNotEmpty
+                ? submissionContent.last.fullname
+                : null,
+            limit: _numberOfPostsToFetch);
 
-      await for (UserContent post in subreddit) {
-        Submission submission = post;
-        submissionContent.add(submission);
+        var posts = await subreddit.toList();
+        hasLoadedAllAvailablePosts = posts.length != _numberOfPostsToFetch;
+        for (UserContent post in posts) {
+          Submission submission = post;
+          submissionContent.add(submission);
+        }
+        return true;
+      } catch (_) {
+        return false;
       }
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return true;
   }
 
   void _initScrollController() {
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
+              scrollController.position.maxScrollExtent &&
+          !hasLoadedAllAvailablePosts) {
         _getPosts(currentSubreddit);
       }
     });

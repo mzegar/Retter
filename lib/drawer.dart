@@ -59,20 +59,23 @@ class SubDrawer extends StatelessWidget {
   }
 
   Widget _buildSavedSub(String title) {
-    return ListTile(
-      title: Text(
-        title,
-        style: GoogleFonts.inter(),
-      ),
-      trailing: IconButton(
-        icon: Icon(Icons.remove),
-        onPressed: () {
-          onDeleteSubredditTap(title);
+    return Material(
+      color: Color(0xFF121212),
+      child: ListTile(
+        title: Text(
+          title,
+          style: GoogleFonts.inter(),
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () {
+            onDeleteSubredditTap(title);
+          },
+        ),
+        onTap: () {
+          onSavedSubredditTap(title);
         },
       ),
-      onTap: () {
-        onSavedSubredditTap(title);
-      },
     );
   }
 }

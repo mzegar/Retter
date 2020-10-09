@@ -39,99 +39,105 @@ class _SubredditPostState extends State<SubredditPost> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Card(
-          margin: EdgeInsets.zero,
-          color: Color(0xFF282828),
-          child: Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  if (widget.onTap != null) widget.onTap();
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.submissionData.title,
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Text(
-                            widget.submissionData.author,
-                            style: GoogleFonts.inter(
-                              color: Colors.blueGrey,
-                              fontSize: 11,
-                            ),
-                          ),
-                          Text(
-                            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
-                            style: GoogleFonts.inter(
-                              color: Colors.white60,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
+        margin: EdgeInsets.zero,
+        color: Color(0xFF282828),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.submissionData.title,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    widget.submissionData.isSelf || widget.isViewingPost
-                        ? Container()
-                        : _buildPostThumbnail(
-                            widget.submissionData.preview, screenWidth),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        if (!widget.isViewingPost)
-                          IconButton(
-                            icon: Icon(
-                              EvaIcons.messageSquareOutline,
-                            ),
-                            onPressed: () {
-                              if (widget.onCommentTap != null)
-                                widget.onCommentTap();
-                            },
-                          ),
-                        if (!widget.isViewingPost && widget.isLoggedIn)
-                          IconButton(
-                            icon: Icon(
-                              Icons.keyboard_arrow_up,
-                              color: widget.submissionData.vote ==
-                                          VoteState.upvoted ||
+                      Text(
+                        widget.submissionData.author,
+                        style: GoogleFonts.inter(
+                          color: Colors.blueGrey,
+                          fontSize: 11,
+                        ),
+                      ),
+                      Text(
+                        '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
+                        style: GoogleFonts.inter(
+                          color: Colors.white60,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                widget.submissionData.isSelf || widget.isViewingPost
+                    ? Container()
+                    : _buildPostThumbnail(
+                        widget.submissionData.preview, screenWidth),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (!widget.isViewingPost)
+                      IconButton(
+                        icon: Icon(
+                          EvaIcons.messageSquareOutline,
+                        ),
+                        onPressed: () {
+                          if (widget.onCommentTap != null)
+                            widget.onCommentTap();
+                        },
+                      ),
+                    if (!widget.isViewingPost && widget.isLoggedIn)
+                      IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_up,
+                          color:
+                              widget.submissionData.vote == VoteState.upvoted ||
                                       voteStatus == VoteState.upvoted
                                   ? Colors.red
                                   : Colors.white,
-                            ),
-                            onPressed: () {
-                              _upVote();
-                            },
-                          ),
-                        if (!widget.isViewingPost && widget.isLoggedIn)
-                          IconButton(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: widget.submissionData.vote ==
-                                          VoteState.downvoted ||
-                                      voteStatus == VoteState.downvoted
-                                  ? Colors.red
-                                  : Colors.white,
-                            ),
-                            onPressed: () {
-                              _downVote();
-                            },
-                          ),
-                      ],
-                    ),
-                    if (widget.selfText != null && widget.selfText.isNotEmpty)
-                      _buildSelfText(),
+                        ),
+                        onPressed: () {
+                          _upVote();
+                        },
+                      ),
+                    if (!widget.isViewingPost && widget.isLoggedIn)
+                      IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: widget.submissionData.vote ==
+                                      VoteState.downvoted ||
+                                  voteStatus == VoteState.downvoted
+                              ? Colors.red
+                              : Colors.white,
+                        ),
+                        onPressed: () {
+                          _downVote();
+                        },
+                      ),
                   ],
                 ),
+                if (widget.selfText != null && widget.selfText.isNotEmpty)
+                  _buildSelfText(),
+              ],
+            ),
+            Positioned.fill(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    if (widget.onTap != null) widget.onTap();
+                  },
+                ),
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

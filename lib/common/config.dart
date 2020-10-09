@@ -48,7 +48,6 @@ class Config {
 
   Future login(void Function(Reddit redditResponse) onLogin) async {
     FlutterWebviewPlugin flutterWebView = FlutterWebviewPlugin();
-
     final redditLogin = Reddit.createInstalledFlowInstance(
       clientId: clientId,
       userAgent: userAgent,

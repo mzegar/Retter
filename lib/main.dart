@@ -156,8 +156,11 @@ class MainPage extends StatelessWidget {
       return SliverList(
         delegate: SliverChildListDelegate(
           List.generate(viewModel.submissionContent.length + 1, (index) {
-            if (index == viewModel.submissionContent.length) {
+            var isLastIndex = index == viewModel.submissionContent.length;
+            if (isLastIndex && !viewModel.hasLoadedAllAvailablePosts) {
               return buildLoadingPostIndicator('Loading posts...');
+            } else if (isLastIndex && viewModel.hasLoadedAllAvailablePosts) {
+              return Container();
             }
 
             var submissionData = viewModel.submissionContent.elementAt(index);
