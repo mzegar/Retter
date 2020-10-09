@@ -27,6 +27,6 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 
 https://github.com/mzegar/Retter/issues
 
-## Video
+## Video showcase
 
-[<img src="/screenshots/Video thumbnail.jpg" width="275">](https://drive.google.com/file/d/1zes6bM9Ud92K6-q2MJLJbvOSiTTBO_ex/view?usp=sharing) 
+[<img src="/screenshots/Video thumbnail.jpg" width="275">](https://www.youtube.com/watch?v=a_tQ7w4Oda0) 
