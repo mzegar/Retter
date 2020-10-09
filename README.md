@@ -10,7 +10,7 @@ https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
 ## Screenshots
 
-<img src="/screenshots/img3.jpg" width="275"> <img src="/screenshots/img2.jpg" width="275"> <img src="/screenshots/img1.jpg" width="275">
+<img src="/screenshots/img4.jpg" width="275"> <img src="/screenshots/img5.jpg" width="275"> 
 
 ## Building from source
 
