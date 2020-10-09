@@ -10,7 +10,7 @@ https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
 ## Screenshots
 
-<img src="/screenshots/img4.jpg" width="275"> <img src="/screenshots/img5.jpg" width="275"> [<img src="/screenshots/Video thumbnail.jpg" width="275">](https://drive.google.com/file/d/1zes6bM9Ud92K6-q2MJLJbvOSiTTBO_ex/view?usp=sharing) 
+<img src="/screenshots/img4.jpg" width="275"> <img src="/screenshots/img5.jpg" width="275">
 
 ## Building from source
 
@@ -23,6 +23,10 @@ https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 I'm open to anyone contributing to this repo. I'd advise using Android Studio and running a `dartfmt` before creating a pull request: `dartfmt`.
 Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel pattern. Check out `src/main.dart` and `src/mainpage_viewmodel.dart`.
 
-## TODO
+## TODO List
 
 https://github.com/mzegar/Retter/issues
+
+## Out of Date video
+
+[<img src="/screenshots/Video thumbnail.jpg" width="275">](https://drive.google.com/file/d/1zes6bM9Ud92K6-q2MJLJbvOSiTTBO_ex/view?usp=sharing) 
