@@ -27,6 +27,7 @@ abstract class PageCommentModelBase with Store {
 
 abstract class PostPageViewModelBase with Store {
   final Submission submission;
+  final Function(String) goTo;
 
   @observable
   bool loadingComments = false;
@@ -36,14 +37,13 @@ abstract class PostPageViewModelBase with Store {
 
   PostPageViewModelBase({
     @required this.submission,
+    this.goTo,
   }) {
     getComments();
   }
 
   bool isSelfPost() {
-    return submission.isSelf &&
-        submission.selftext != null &&
-        submission.selftext.isNotEmpty;
+    return submission.isSelf && submission.selftext != null && submission.selftext.isNotEmpty;
   }
 
   Future getComments() async {
@@ -91,13 +91,11 @@ abstract class PostPageViewModelBase with Store {
     }
   }
 
-  void _getNestedComments(
-      List commentList, List<PageComment> pageCommentList, int level) {
+  void _getNestedComments(List commentList, List<PageComment> pageCommentList, int level) {
     level += 1;
     for (var comment in commentList) {
       if (comment is Comment) {
-        pageCommentList
-            .add(PageComment(commentData: comment, commentLevel: level));
+        pageCommentList.add(PageComment(commentData: comment, commentLevel: level));
 
         if (comment.replies != null) {
           _getNestedComments(comment.replies.comments, pageCommentList, level);
