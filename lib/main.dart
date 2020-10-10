@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,6 @@ import 'package:flutterreddit/common/loadingPostIndicator.dart';
 import 'package:flutterreddit/common/popupMenu.dart';
 import 'package:flutterreddit/common/config.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterreddit/mainpage_viewmodel.dart';
@@ -51,7 +51,7 @@ class MainPage extends StatelessWidget {
         backgroundColor: Color(0xFF121212),
         resizeToAvoidBottomInset: false,
         drawer: _buildDrawer(context),
-        body: _buildCustomScrollView(context, viewModel.refreshController),
+        body: _buildCustomScrollView(context),
       );
     });
   }
@@ -86,8 +86,7 @@ class MainPage extends StatelessWidget {
     });
   }
 
-  Widget _buildCustomScrollView(
-      BuildContext context, RefreshController refreshController) {
+  Widget _buildCustomScrollView(BuildContext context) {
     return CustomScrollView(
       physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       controller: viewModel.scrollController,
@@ -115,40 +114,51 @@ class MainPage extends StatelessWidget {
             }),
           ],
         ),
-        SliverFillRemaining(
-          child: SmartRefresher(
-            controller: refreshController,
-            onRefresh: () async {
-              await viewModel.refreshPosts();
-              refreshController.refreshCompleted();
-            },
-            child: viewModel.loadedPostSuccessfully
-                ? _buildPosts(
-                    context: context, refreshController: refreshController)
-                : Container(
-                    color: Colors.red,
-                    height: 100,
-                    width: 100,
-                  ),
-          ),
+        CupertinoSliverRefreshControl(
+          builder: (
+            BuildContext context,
+            RefreshIndicatorMode refreshState,
+            double pulledExtent,
+            double refreshTriggerPullDistance,
+            double refreshIndicatorExtent,
+          ) {
+            if (pulledExtent < 15) {
+              return Container();
+            }
+            switch (refreshState) {
+              case RefreshIndicatorMode.inactive:
+              case RefreshIndicatorMode.done:
+              case RefreshIndicatorMode.armed:
+              case RefreshIndicatorMode.refresh:
+                return Container();
+                break;
+              case RefreshIndicatorMode.drag:
+                return Icon(
+                  EvaIcons.arrowIosUpwardOutline,
+                  size: pulledExtent * 0.5,
+                );
+                break;
+            }
+
+            return Container();
+          },
+          onRefresh: () async {
+            viewModel.refreshPosts();
+          },
         ),
+        if (viewModel.loadedPostSuccessfully) _buildPosts(context),
       ],
     );
   }
 
-  Widget _buildPosts(
-      {BuildContext context, RefreshController refreshController}) {
+  Widget _buildPosts(BuildContext context) {
     return Observer(builder: (_) {
-      return SingleChildScrollView(
-        child: Column(
-          children:
-              List.generate(viewModel.submissionContent.length + 1, (index) {
+      return SliverList(
+        delegate: SliverChildListDelegate(
+          List.generate(viewModel.submissionContent.length + 1, (index) {
             var isLastIndex = index == viewModel.submissionContent.length;
             if (isLastIndex && !viewModel.hasLoadedAllAvailablePosts) {
-              return buildLoadingPostIndicator(
-                'Loading posts...',
-                viewModel,
-              );
+              return buildLoadingPostIndicator('Loading posts...');
             } else if (isLastIndex && viewModel.hasLoadedAllAvailablePosts) {
               return Container();
             }

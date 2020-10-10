@@ -6,7 +6,6 @@ import 'package:flutterreddit/postpage_viewmodel.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterreddit/common/config.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 part 'mainpage_viewmodel.g.dart';
 
@@ -15,8 +14,6 @@ class MainPageViewModel = MainPageViewModelBase with _$MainPageViewModel;
 abstract class MainPageViewModelBase with Store {
   final Config config;
   final ScrollController scrollController = ScrollController();
-  final RefreshController refreshController =
-      RefreshController(initialRefresh: false);
   final String defaultSubredditString = 'all';
   final int _numberOfPostsToFetch = 25;
 
@@ -57,7 +54,6 @@ abstract class MainPageViewModelBase with Store {
       MaterialPageRoute(
         builder: (BuildContext context) => PostPage(
           viewModel: PostPageViewModel(submission: submission),
-          mainPageViewModel: this,
         ),
       ),
     );

@@ -39,7 +39,6 @@ dependencies:
   transparent_image: ^1.0.0
   intl: ^0.15.6
   flutter_markdown: ^0.4.4
-  pull_to_refresh: ^1.6.2
 
 dev_dependencies:
   flutter_test:
