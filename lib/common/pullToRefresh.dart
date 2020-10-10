@@ -28,7 +28,7 @@ Widget buildPullToRefresh(
           height: 45,
           child: Icon(
             EvaIcons.refresh,
-            size: 20,
+            size: 17,
           ),
           decoration: BoxDecoration(
             shape: BoxShape.circle,

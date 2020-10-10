@@ -41,87 +41,84 @@ class _SubredditPostState extends State<SubredditPost> {
     super.initState();
   }
 
+  // if (widget.onTap != null) widget.onTap();
+
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
-      child: GestureDetector(
-        onTap: () {
-          if (widget.onTap != null) widget.onTap();
-        },
-        child: Card(
-          margin: EdgeInsets.zero,
-          color: Color(0xFF282828),
+      child: Card(
+        margin: EdgeInsets.zero,
+        color: Color(0xFF282828),
+        child: InkWell(
+          onTap: () {
+            if (widget.onTap != null) widget.onTap();
+          },
           child: Column(
             children: [
-              Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.submissionData.title,
-                              style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            GestureDetector(
-                              child: Text(
-                                'u/${widget.submissionData.author}',
-                                style: GoogleFonts.inter(
-                                  color: Colors.blueGrey,
-                                  fontSize: 11,
-                                ),
-                              ),
-                              onTap: () {},
-                            ),
-                            SizedBox(height: 4),
-                            RichText(
-                              text: TextSpan(
-                                text:
-                                    '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
-                                style: GoogleFonts.inter(
-                                  color: Colors.white60,
-                                  fontSize: 11,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        'r/${widget.submissionData.subreddit.displayName}',
-                                    recognizer: new TapGestureRecognizer()
-                                      ..onTap = () {
-                                        if (widget.isViewingPost) {
-                                          Navigator.pop(context);
-                                        }
-                                        widget.onSubredditTap(widget
-                                            .submissionData
-                                            .subreddit
-                                            .displayName);
-                                      },
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.submissionData.title,
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      widget.submissionData.isSelf || widget.isViewingPost
-                          ? Container()
-                          : _buildPostThumbnail(
-                              widget.submissionData.preview, screenWidth),
-                      if (widget.selfText != null && widget.selfText.isNotEmpty)
-                        _buildSelfText(),
-                    ],
+                        SizedBox(height: 4),
+                        Text(
+                          'u/${widget.submissionData.author}',
+                          style: GoogleFonts.inter(
+                            color: Colors.blueGrey,
+                            fontSize: 11,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        RichText(
+                          text: TextSpan(
+                            text:
+                            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
+                            style: GoogleFonts.inter(
+                              color: Colors.white60,
+                              fontSize: 11,
+                            ),
+                            children: [
+                              TextSpan(
+                                text:
+                                'r/${widget.submissionData.subreddit.displayName}',
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () {
+                                    if (widget.isViewingPost) {
+                                      Navigator.pop(context);
+                                    }
+                                    widget.onSubredditTap(widget
+                                        .submissionData
+                                        .subreddit
+                                        .displayName);
+                                  },
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  widget.submissionData.isSelf || widget.isViewingPost
+                      ? Container()
+                      : _buildPostThumbnail(
+                    widget.submissionData.preview,
+                    screenWidth,
+                  ),
+                  if (widget.selfText != null && widget.selfText.isNotEmpty)
+                    _buildSelfText(),
                 ],
               ),
               _buildBottomBar(),

@@ -29,6 +29,7 @@ Future<void> main() async {
       brightness: Brightness.dark,
       primaryColor: Color(0xFF030303),
       accentColor: Colors.blueAccent,
+      splashColor: Colors.blueGrey,
     ),
     home: MainPage(
       viewModel: MainPageViewModel(
