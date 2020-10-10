@@ -41,8 +41,6 @@ class _SubredditPostState extends State<SubredditPost> {
     super.initState();
   }
 
-  // if (widget.onTap != null) widget.onTap();
-
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
