@@ -93,7 +93,8 @@ class _SubredditPostState extends State<SubredditPost> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: 'r/${widget.submissionData.subreddit.displayName}',
+                                    text:
+                                        'r/${widget.submissionData.subreddit.displayName}',
                                     recognizer: new TapGestureRecognizer()
                                       ..onTap = () {
                                         if (widget.isViewingPost) {
@@ -101,7 +102,8 @@ class _SubredditPostState extends State<SubredditPost> {
                                         }
                                         widget.onSubredditTap(widget.submissionData.subreddit.displayName);
                                       },
-                                    style: TextStyle(decoration: TextDecoration.underline),
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline),
                                   ),
                                 ],
                               ),
@@ -111,8 +113,10 @@ class _SubredditPostState extends State<SubredditPost> {
                       ),
                       widget.submissionData.isSelf || widget.isViewingPost
                           ? Container()
-                          : _buildPostThumbnail(widget.submissionData.preview, screenWidth),
-                      if (widget.selfText != null && widget.selfText.isNotEmpty) _buildSelfText(),
+                          : _buildPostThumbnail(
+                              widget.submissionData.preview, screenWidth),
+                      if (widget.selfText != null && widget.selfText.isNotEmpty)
+                        _buildSelfText(),
                     ],
                   ),
                 ],
@@ -156,7 +160,10 @@ class _SubredditPostState extends State<SubredditPost> {
           IconButton(
             icon: Icon(
               Icons.keyboard_arrow_up,
-              color: widget.submissionData.vote == VoteState.upvoted || voteStatus == VoteState.upvoted ? Colors.red : Colors.white,
+              color: widget.submissionData.vote == VoteState.upvoted ||
+                      voteStatus == VoteState.upvoted
+                  ? Colors.red
+                  : Colors.white,
             ),
             onPressed: () {
               _upVote();
@@ -166,7 +173,10 @@ class _SubredditPostState extends State<SubredditPost> {
           IconButton(
             icon: Icon(
               Icons.keyboard_arrow_down,
-              color: widget.submissionData.vote == VoteState.downvoted || voteStatus == VoteState.downvoted ? Colors.red : Colors.white,
+              color: widget.submissionData.vote == VoteState.downvoted ||
+                      voteStatus == VoteState.downvoted
+                  ? Colors.red
+                  : Colors.white,
             ),
             onPressed: () {
               _downVote();
@@ -176,7 +186,8 @@ class _SubredditPostState extends State<SubredditPost> {
     );
   }
 
-  Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails, double screenWidth) {
+  Widget _buildPostThumbnail(
+      List<SubmissionPreview> thumbnails, double screenWidth) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
       var imageResolution = image.height / image.width;
@@ -216,7 +227,8 @@ class _SubredditPostState extends State<SubredditPost> {
             tableColumnWidth: IntrinsicColumnWidth(),
           ),
           data: widget.submissionData.selftext,
-          extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
+          extensionSet:
+              md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
             md.EmojiSyntax(),
             ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
           ]),

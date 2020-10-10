@@ -144,12 +144,12 @@ class MainPage extends StatelessWidget {
             viewModel.refreshPosts();
           },
         ),
-        if (viewModel.loadedPostSuccessfully) _buildPosts(context: context),
+        if (viewModel.loadedPostSuccessfully) _buildPosts(context),
       ],
     );
   }
 
-  Widget _buildPosts({BuildContext context}) {
+  Widget _buildPosts(BuildContext context) {
     return Observer(builder: (_) {
       return SliverList(
         delegate: SliverChildListDelegate(
