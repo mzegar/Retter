@@ -35,7 +35,8 @@ class PostPage extends StatelessWidget {
               context: context,
               submissionData: viewModel.submission,
               isViewingPost: true,
-              selfText: viewModel.isSelfPost() ? viewModel.submission.selftext : '',
+              selfText:
+                  viewModel.isSelfPost() ? viewModel.submission.selftext : '',
               onTap: () async {
                 if (!viewModel.submission.isSelf) {
                   await launchURL(viewModel.submission.url.toString());
@@ -43,7 +44,9 @@ class PostPage extends StatelessWidget {
               },
               onSubredditTap: viewModel.goTo,
             ),
-            viewModel.loadingComments ? buildLoadingPostIndicator('Loading comments...') : _buildComments(),
+            viewModel.loadingComments
+                ? buildLoadingPostIndicator('Loading comments...')
+                : _buildComments(),
           ],
         ),
       );
@@ -75,7 +78,8 @@ class PostPage extends StatelessWidget {
           child: Card(
             elevation: 0,
             color: Colors.transparent,
-            margin: EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
+            margin:
+                EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
@@ -108,7 +112,8 @@ class PostPage extends StatelessWidget {
             viewModel.collapseNestedComments(index);
           },
           child: Container(
-            margin: EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
+            margin:
+                EdgeInsets.fromLTRB(5.0 * comment.commentLevel, 5.0, 5.0, 5.0),
             child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(

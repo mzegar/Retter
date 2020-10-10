@@ -73,7 +73,8 @@ class Config {
         saveLoginDetails(redditLogin.auth.credentials.toJson());
         flutterWebView.close();
         onLogin(redditLogin);
-      } else if (url.contains('$redirectUri?state=$userAgent&error=access_denied')) {
+      } else if (url
+          .contains('$redirectUri?state=$userAgent&error=access_denied')) {
         // TODO: Failed to authenticate
         flutterWebView.close();
         onLogin(null);

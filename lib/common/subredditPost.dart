@@ -100,7 +100,10 @@ class _SubredditPostState extends State<SubredditPost> {
                                         if (widget.isViewingPost) {
                                           Navigator.pop(context);
                                         }
-                                        widget.onSubredditTap(widget.submissionData.subreddit.displayName);
+                                        widget.onSubredditTap(widget
+                                            .submissionData
+                                            .subreddit
+                                            .displayName);
                                       },
                                     style: TextStyle(
                                         decoration: TextDecoration.underline),

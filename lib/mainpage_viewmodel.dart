@@ -48,7 +48,8 @@ abstract class MainPageViewModelBase with Store {
   @observable
   bool hasLoadedAllAvailablePosts = false;
 
-  void goToPostPage(BuildContext context, Submission submission, Function(String) goTo) {
+  void goToPostPage(
+      BuildContext context, Submission submission, Function(String) goTo) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -60,8 +61,9 @@ abstract class MainPageViewModelBase with Store {
   }
 
   void changeToSubreddit(String subredditTextField) async {
-    print('${currentSubreddit.displayName} to $subredditTextField');
-    if (currentSubreddit.displayName.toLowerCase() == subredditTextField.toLowerCase() && subredditTextField != defaultSubredditString) {
+    if (currentSubreddit.displayName.toLowerCase() ==
+            subredditTextField.toLowerCase() &&
+        subredditTextField != defaultSubredditString) {
       return;
     }
     submissionContent.clear();
@@ -126,8 +128,11 @@ abstract class MainPageViewModelBase with Store {
   Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {
     if (!hasLoadedAllAvailablePosts)
       try {
-        var subreddit =
-            subredditToFetchFrom.hot(after: submissionContent.isNotEmpty ? submissionContent.last.fullname : null, limit: _numberOfPostsToFetch);
+        var subreddit = subredditToFetchFrom.hot(
+            after: submissionContent.isNotEmpty
+                ? submissionContent.last.fullname
+                : null,
+            limit: _numberOfPostsToFetch);
 
         var posts = await subreddit.toList();
         hasLoadedAllAvailablePosts = posts.length != _numberOfPostsToFetch;
@@ -144,7 +149,9 @@ abstract class MainPageViewModelBase with Store {
 
   void _initScrollController() {
     scrollController.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !hasLoadedAllAvailablePosts) {
+      if (scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent &&
+          !hasLoadedAllAvailablePosts) {
         _getPosts(currentSubreddit);
       }
     });
