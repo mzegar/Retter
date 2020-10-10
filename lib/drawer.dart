@@ -63,7 +63,7 @@ class SubDrawer extends StatelessWidget {
       color: Color(0xFF121212),
       child: ListTile(
         title: Text(
-          title,
+          'r/$title',
           style: GoogleFonts.inter(),
         ),
         trailing: IconButton(

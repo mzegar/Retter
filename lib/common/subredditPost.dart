@@ -96,6 +96,9 @@ class _SubredditPostState extends State<SubredditPost> {
                                     text: 'r/${widget.submissionData.subreddit.displayName}',
                                     recognizer: new TapGestureRecognizer()
                                       ..onTap = () {
+                                        if (widget.isViewingPost) {
+                                          Navigator.pop(context);
+                                        }
                                         widget.onSubredditTap(widget.submissionData.subreddit.displayName);
                                       },
                                     style: TextStyle(decoration: TextDecoration.underline),

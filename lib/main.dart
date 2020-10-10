@@ -78,7 +78,7 @@ class MainPage extends StatelessWidget {
   Widget _buildTitle() {
     return Observer(builder: (_) {
       return Text(
-        viewModel.currentSubreddit != null ? viewModel.currentSubreddit.displayName : viewModel.defaultSubredditString,
+        'r/${viewModel.currentSubreddit != null ? viewModel.currentSubreddit.displayName : viewModel.defaultSubredditString}',
         style: GoogleFonts.inter(),
       );
     });
@@ -172,13 +172,13 @@ class MainPage extends StatelessWidget {
               },
               onTap: () async {
                 if (submissionData.isSelf) {
-                  viewModel.goToPostPage(context, submissionData);
+                  viewModel.goToPostPage(context, submissionData, viewModel.changeToSubreddit);
                 } else {
                   await launchURL(submissionData.url.toString());
                 }
               },
               onCommentTap: () {
-                viewModel.goToPostPage(context, submissionData);
+                viewModel.goToPostPage(context, submissionData, viewModel.changeToSubreddit);
               },
             );
           }),

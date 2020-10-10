@@ -30,7 +30,13 @@ class Config {
 
   List<String> saveSubreddit(String subreddit) {
     var sharedPreferencesSubs = sharedPreferences.getStringList(subredditKey);
-    if (!sharedPreferencesSubs.contains(subreddit)) {
+    bool isSaved = false;
+    sharedPreferencesSubs.forEach((val) {
+      if (val.toLowerCase() == subreddit.toLowerCase()) {
+        isSaved = true;
+      }
+    });
+    if (!isSaved) {
       sharedPreferencesSubs.add(subreddit);
       sharedPreferences.setStringList(subredditKey, sharedPreferencesSubs);
     }
@@ -67,8 +73,7 @@ class Config {
         saveLoginDetails(redditLogin.auth.credentials.toJson());
         flutterWebView.close();
         onLogin(redditLogin);
-      } else if (url
-          .contains('$redirectUri?state=$userAgent&error=access_denied')) {
+      } else if (url.contains('$redirectUri?state=$userAgent&error=access_denied')) {
         // TODO: Failed to authenticate
         flutterWebView.close();
         onLogin(null);

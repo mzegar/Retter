@@ -41,6 +41,7 @@ class PostPage extends StatelessWidget {
                   await launchURL(viewModel.submission.url.toString());
                 }
               },
+              onSubredditTap: viewModel.goTo,
             ),
             viewModel.loadingComments ? buildLoadingPostIndicator('Loading comments...') : _buildComments(),
           ],
