@@ -78,9 +78,7 @@ class MainPage extends StatelessWidget {
   Widget _buildTitle() {
     return Observer(builder: (_) {
       return Text(
-        viewModel.currentSubreddit != null
-            ? viewModel.currentSubreddit.displayName
-            : viewModel.defaultSubredditString,
+        viewModel.currentSubreddit != null ? viewModel.currentSubreddit.displayName : viewModel.defaultSubredditString,
         style: GoogleFonts.inter(),
       );
     });
@@ -169,6 +167,9 @@ class MainPage extends StatelessWidget {
               submissionData: submissionData,
               isViewingPost: false,
               isLoggedIn: viewModel?.redditor != null,
+              onSubredditTap: (String enteredText) {
+                viewModel.changeToSubreddit(enteredText);
+              },
               onTap: () async {
                 if (submissionData.isSelf) {
                   viewModel.goToPostPage(context, submissionData);

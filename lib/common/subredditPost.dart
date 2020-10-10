@@ -1,5 +1,6 @@
 import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutterreddit/common/launchURL.dart';
@@ -15,6 +16,7 @@ class SubredditPost extends StatefulWidget {
   final bool isLoggedIn;
   final void Function() onTap;
   final void Function() onCommentTap;
+  final void Function(String subreddit) onSubredditTap;
   final String selfText;
 
   const SubredditPost({
@@ -24,6 +26,7 @@ class SubredditPost extends StatefulWidget {
     this.isLoggedIn,
     this.onTap,
     this.onCommentTap,
+    this.onSubredditTap,
     this.selfText,
   });
   @override
@@ -34,70 +37,86 @@ class _SubredditPostState extends State<SubredditPost> {
   VoteState voteStatus = VoteState.none;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
-      child: Card(
-        margin: EdgeInsets.zero,
-        color: Color(0xFF282828),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.submissionData.title,
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
+      child: GestureDetector(
+        onTap: () {
+          if (widget.onTap != null) widget.onTap();
+        },
+        child: Card(
+          margin: EdgeInsets.zero,
+          color: Color(0xFF282828),
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.submissionData.title,
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
-                          Text(
-                            widget.submissionData.author,
-                            style: GoogleFonts.inter(
-                              color: Colors.blueGrey,
-                              fontSize: 11,
+                            SizedBox(height: 4),
+                            GestureDetector(
+                              child: Text(
+                                'u/${widget.submissionData.author}',
+                                style: GoogleFonts.inter(
+                                  color: Colors.blueGrey,
+                                  fontSize: 11,
+                                ),
+                              ),
+                              onTap: () {},
                             ),
-                          ),
-                          Text(
-                            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
-                            style: GoogleFonts.inter(
-                              color: Colors.white60,
-                              fontSize: 11,
+                            SizedBox(height: 4),
+                            RichText(
+                              text: TextSpan(
+                                text:
+                                    '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
+                                style: GoogleFonts.inter(
+                                  color: Colors.white60,
+                                  fontSize: 11,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'r/${widget.submissionData.subreddit.displayName}',
+                                    recognizer: new TapGestureRecognizer()
+                                      ..onTap = () {
+                                        widget.onSubredditTap(widget.submissionData.subreddit.displayName);
+                                      },
+                                    style: TextStyle(decoration: TextDecoration.underline),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    widget.submissionData.isSelf || widget.isViewingPost
-                        ? Container()
-                        : _buildPostThumbnail(
-                            widget.submissionData.preview, screenWidth),
-                    if (widget.selfText != null && widget.selfText.isNotEmpty)
-                      _buildSelfText(),
-                  ],
-                ),
-                Positioned.fill(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        if (widget.onTap != null) widget.onTap();
-                      },
-                    ),
+                      widget.submissionData.isSelf || widget.isViewingPost
+                          ? Container()
+                          : _buildPostThumbnail(widget.submissionData.preview, screenWidth),
+                      if (widget.selfText != null && widget.selfText.isNotEmpty) _buildSelfText(),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            _buildBottomBar(),
-          ],
+                ],
+              ),
+              _buildBottomBar(),
+            ],
+          ),
         ),
       ),
     );
@@ -134,10 +153,7 @@ class _SubredditPostState extends State<SubredditPost> {
           IconButton(
             icon: Icon(
               Icons.keyboard_arrow_up,
-              color: widget.submissionData.vote == VoteState.upvoted ||
-                      voteStatus == VoteState.upvoted
-                  ? Colors.red
-                  : Colors.white,
+              color: widget.submissionData.vote == VoteState.upvoted || voteStatus == VoteState.upvoted ? Colors.red : Colors.white,
             ),
             onPressed: () {
               _upVote();
@@ -147,10 +163,7 @@ class _SubredditPostState extends State<SubredditPost> {
           IconButton(
             icon: Icon(
               Icons.keyboard_arrow_down,
-              color: widget.submissionData.vote == VoteState.downvoted ||
-                      voteStatus == VoteState.downvoted
-                  ? Colors.red
-                  : Colors.white,
+              color: widget.submissionData.vote == VoteState.downvoted || voteStatus == VoteState.downvoted ? Colors.red : Colors.white,
             ),
             onPressed: () {
               _downVote();
@@ -160,8 +173,7 @@ class _SubredditPostState extends State<SubredditPost> {
     );
   }
 
-  Widget _buildPostThumbnail(
-      List<SubmissionPreview> thumbnails, double screenWidth) {
+  Widget _buildPostThumbnail(List<SubmissionPreview> thumbnails, double screenWidth) {
     if (thumbnails != null && thumbnails.isNotEmpty) {
       var image = thumbnails.first.resolutions.last;
       var imageResolution = image.height / image.width;
@@ -178,31 +190,37 @@ class _SubredditPostState extends State<SubredditPost> {
   }
 
   Widget _buildSelfText() {
-    return Padding(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: EdgeInsets.all(10),
-      child: MarkdownBody(
-        styleSheet: MarkdownStyleSheet(
-          p: GoogleFonts.inter(
-            fontSize: 13,
+      child: IntrinsicHeight(
+        child: MarkdownBody(
+          styleSheet: MarkdownStyleSheet(
+            p: GoogleFonts.inter(
+              fontSize: 13,
+            ),
+            h1: GoogleFonts.inter(
+              fontSize: 16,
+            ),
+            h2: GoogleFonts.inter(
+              fontSize: 19,
+            ),
+            h3: GoogleFonts.inter(
+              fontSize: 22,
+            ),
+            tableHead: TextStyle(fontWeight: FontWeight.bold),
+            tableBody: GoogleFonts.ptMono(),
+            tableColumnWidth: IntrinsicColumnWidth(),
           ),
-          h1: GoogleFonts.inter(
-            fontSize: 16,
-          ),
-          h2: GoogleFonts.inter(
-            fontSize: 19,
-          ),
-          h3: GoogleFonts.inter(
-            fontSize: 22,
-          ),
+          data: widget.submissionData.selftext,
+          extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
+            md.EmojiSyntax(),
+            ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+          ]),
+          onTapLink: (String url) async {
+            await launchURL(url);
+          },
         ),
-        data: widget.submissionData.selftext,
-        extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
-          md.EmojiSyntax(),
-          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-        ]),
-        onTapLink: (String url) async {
-          await launchURL(url);
-        },
       ),
     );
   }
