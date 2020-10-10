@@ -5,14 +5,15 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterreddit/common/launchURL.dart';
 import 'package:flutterreddit/common/loadingPostIndicator.dart';
+import 'package:flutterreddit/mainpage_viewmodel.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
 import 'package:flutterreddit/common/subredditPost.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;
-
-  const PostPage({@required this.viewModel});
+  final MainPageViewModel mainPageViewModel;
+  const PostPage({@required this.viewModel, @required this.mainPageViewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,10 @@ class PostPage extends StatelessWidget {
               },
             ),
             viewModel.loadingComments
-                ? buildLoadingPostIndicator('Loading comments...')
+                ? buildLoadingPostIndicator(
+                    'Loading comments...',
+                    mainPageViewModel,
+                  )
                 : _buildComments(),
           ],
         ),

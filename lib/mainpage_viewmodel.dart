@@ -57,6 +57,7 @@ abstract class MainPageViewModelBase with Store {
       MaterialPageRoute(
         builder: (BuildContext context) => PostPage(
           viewModel: PostPageViewModel(submission: submission),
+          mainPageViewModel: this,
         ),
       ),
     );

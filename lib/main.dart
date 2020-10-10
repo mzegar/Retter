@@ -124,7 +124,8 @@ class MainPage extends StatelessWidget {
               refreshController.refreshCompleted();
             },
             child: viewModel.loadedPostSuccessfully
-                ? _buildPosts(context: context)
+                ? _buildPosts(
+                    context: context, refreshController: refreshController)
                 : Container(
                     color: Colors.red,
                     height: 100,
@@ -136,7 +137,8 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPosts({BuildContext context}) {
+  Widget _buildPosts(
+      {BuildContext context, RefreshController refreshController}) {
     return Observer(builder: (_) {
       return SingleChildScrollView(
         child: Column(
@@ -144,7 +146,10 @@ class MainPage extends StatelessWidget {
               List.generate(viewModel.submissionContent.length + 1, (index) {
             var isLastIndex = index == viewModel.submissionContent.length;
             if (isLastIndex && !viewModel.hasLoadedAllAvailablePosts) {
-              return buildLoadingPostIndicator('Loading posts...');
+              return buildLoadingPostIndicator(
+                'Loading posts...',
+                viewModel,
+              );
             } else if (isLastIndex && viewModel.hasLoadedAllAvailablePosts) {
               return Container();
             }
