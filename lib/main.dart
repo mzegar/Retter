@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -79,7 +78,9 @@ class MainPage extends StatelessWidget {
   Widget _buildTitle() {
     return Observer(builder: (_) {
       return Text(
-        viewModel.currentSubreddit != null ? viewModel.currentSubreddit.displayName : viewModel.defaultSubredditString,
+        viewModel.currentSubreddit != null
+            ? viewModel.currentSubreddit.displayName
+            : viewModel.defaultSubredditString,
         style: GoogleFonts.inter(),
       );
     });
