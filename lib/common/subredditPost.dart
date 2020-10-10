@@ -15,6 +15,7 @@ class SubredditPost extends StatefulWidget {
   final bool isLoggedIn;
   final void Function() onTap;
   final void Function() onCommentTap;
+  final void Function() onLongPress;
   final String selfText;
 
   const SubredditPost({
@@ -25,6 +26,7 @@ class SubredditPost extends StatefulWidget {
     this.onTap,
     this.onCommentTap,
     this.selfText,
+    this.onLongPress,
   });
   @override
   _SubredditPostState createState() => _SubredditPostState();
@@ -39,13 +41,18 @@ class _SubredditPostState extends State<SubredditPost> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Card(
-        margin: EdgeInsets.zero,
-        color: Color(0xFF282828),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Column(
+          margin: EdgeInsets.zero,
+          color: Color(0xFF282828),
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  if (widget.onTap != null) widget.onTap();
+                },
+                onLongPress: () {
+                  if (widget.onLongPress != null) widget.onLongPress();
+                },
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
@@ -80,26 +87,56 @@ class _SubredditPostState extends State<SubredditPost> {
                         ? Container()
                         : _buildPostThumbnail(
                             widget.submissionData.preview, screenWidth),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        if (!widget.isViewingPost)
+                          IconButton(
+                            icon: Icon(
+                              EvaIcons.messageSquareOutline,
+                            ),
+                            onPressed: () {
+                              if (widget.onCommentTap != null)
+                                widget.onCommentTap();
+                            },
+                          ),
+                        if (!widget.isViewingPost && widget.isLoggedIn)
+                          IconButton(
+                            icon: Icon(
+                              Icons.keyboard_arrow_up,
+                              color: widget.submissionData.vote ==
+                                          VoteState.upvoted ||
+                                      voteStatus == VoteState.upvoted
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                            onPressed: () {
+                              _upVote();
+                            },
+                          ),
+                        if (!widget.isViewingPost && widget.isLoggedIn)
+                          IconButton(
+                            icon: Icon(
+                              Icons.keyboard_arrow_down,
+                              color: widget.submissionData.vote ==
+                                          VoteState.downvoted ||
+                                      voteStatus == VoteState.downvoted
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                            onPressed: () {
+                              _downVote();
+                            },
+                          ),
+                      ],
+                    ),
                     if (widget.selfText != null && widget.selfText.isNotEmpty)
                       _buildSelfText(),
                   ],
                 ),
-                Positioned.fill(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        if (widget.onTap != null) widget.onTap();
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            _buildBottomBar(),
-          ],
-        ),
-      ),
+              ),
+            ],
+          )),
     );
   }
 
@@ -115,49 +152,6 @@ class _SubredditPostState extends State<SubredditPost> {
     setState(() {
       voteStatus = VoteState.downvoted;
     });
-  }
-
-  Widget _buildBottomBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        if (!widget.isViewingPost)
-          IconButton(
-            icon: Icon(
-              EvaIcons.messageSquareOutline,
-            ),
-            onPressed: () {
-              if (widget.onCommentTap != null) widget.onCommentTap();
-            },
-          ),
-        if (!widget.isViewingPost && widget.isLoggedIn)
-          IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_up,
-              color: widget.submissionData.vote == VoteState.upvoted ||
-                      voteStatus == VoteState.upvoted
-                  ? Colors.red
-                  : Colors.white,
-            ),
-            onPressed: () {
-              _upVote();
-            },
-          ),
-        if (!widget.isViewingPost && widget.isLoggedIn)
-          IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_down,
-              color: widget.submissionData.vote == VoteState.downvoted ||
-                      voteStatus == VoteState.downvoted
-                  ? Colors.red
-                  : Colors.white,
-            ),
-            onPressed: () {
-              _downVote();
-            },
-          ),
-      ],
-    );
   }
 
   Widget _buildPostThumbnail(

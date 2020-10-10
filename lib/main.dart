@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/common/loadingPostIndicator.dart';
+import 'package:flutterreddit/common/popupDialog.dart';
 import 'package:flutterreddit/common/popupMenu.dart';
 import 'package:flutterreddit/common/config.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,11 +158,8 @@ class MainPage extends StatelessWidget {
       return SliverList(
         delegate: SliverChildListDelegate(
           List.generate(viewModel.submissionContent.length + 1, (index) {
-            var isLastIndex = index == viewModel.submissionContent.length;
-            if (isLastIndex && !viewModel.hasLoadedAllAvailablePosts) {
+            if (index == viewModel.submissionContent.length) {
               return buildLoadingPostIndicator('Loading posts...');
-            } else if (isLastIndex && viewModel.hasLoadedAllAvailablePosts) {
-              return Container();
             }
 
             var submissionData = viewModel.submissionContent.elementAt(index);
@@ -179,10 +178,32 @@ class MainPage extends StatelessWidget {
               onCommentTap: () {
                 viewModel.goToPostPage(context, submissionData);
               },
+              onLongPress: () {
+                _copyUrl(submissionData, context);
+              },
             );
           }),
         ),
       );
     });
+  }
+
+  void _copyUrl(Submission submissionData, BuildContext context) {
+    Clipboard.setData(ClipboardData(text: submissionData.url.toString()));
+    _notifyUser(context);
+  }
+
+  void _notifyUser(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          Future.delayed(
+            Duration(seconds: 1),
+            () {
+              Navigator.of(context).pop(true);
+            },
+          );
+          return PopupDialog(text: "Url copied to clipboard");
+        });
   }
 }
