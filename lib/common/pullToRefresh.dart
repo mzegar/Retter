@@ -20,10 +20,22 @@ Widget buildPullToRefresh(
       return Container();
       break;
     case RefreshIndicatorMode.drag:
-      return Icon(
-        EvaIcons.arrowIosUpwardOutline,
-        size: pulledExtent * 0.5,
-      );
+      return Center(
+          child: Transform.rotate(
+        angle: pulledExtent / 10,
+        child: Container(
+          width: 45,
+          height: 45,
+          child: Icon(
+            EvaIcons.refresh,
+            size: 20,
+          ),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFF282828),
+          ),
+        ),
+      ));
       break;
   }
 
