@@ -70,51 +70,58 @@ class _SubredditPostState extends State<SubredditPost> {
                           ),
                         ),
                         SizedBox(height: 4),
-                        Text(
-                          'u/${widget.submissionData.author}',
-                          style: GoogleFonts.inter(
-                            color: Colors.blueGrey,
-                            fontSize: 11,
+                        InkWell(
+                          onTap: () {
+
+                          },
+                          child: Text(
+                            'u/${widget.submissionData.author}',
+                            style: GoogleFonts.inter(
+                              color: Colors.blueGrey,
+                              fontSize: 11,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
+                              style: GoogleFonts.inter(
+                                color: Colors.white60,
+                                fontSize: 11,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (widget.isViewingPost) {
+                                  Navigator.pop(context);
+                                }
+                                widget.onSubredditTap(
+                                  widget.submissionData.subreddit.displayName,
+                                );
+                              },
+                              child: Text(
+                                'r/${widget.submissionData.subreddit.displayName}',
+                                style: GoogleFonts.inter(
+                                  color: Colors.blueGrey,
+                                  fontSize: 11,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 4),
-                        RichText(
-                          text: TextSpan(
-                            text:
-                            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
-                            style: GoogleFonts.inter(
-                              color: Colors.white60,
-                              fontSize: 11,
-                            ),
-                            children: [
-                              TextSpan(
-                                text:
-                                'r/${widget.submissionData.subreddit.displayName}',
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    if (widget.isViewingPost) {
-                                      Navigator.pop(context);
-                                    }
-                                    widget.onSubredditTap(widget
-                                        .submissionData
-                                        .subreddit
-                                        .displayName);
-                                  },
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
                   widget.submissionData.isSelf || widget.isViewingPost
                       ? Container()
                       : _buildPostThumbnail(
-                    widget.submissionData.preview,
-                    screenWidth,
-                  ),
+                          widget.submissionData.preview,
+                          screenWidth,
+                        ),
                   if (widget.selfText != null && widget.selfText.isNotEmpty)
                     _buildSelfText(),
                 ],
@@ -123,6 +130,36 @@ class _SubredditPostState extends State<SubredditPost> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _backup() {
+    return RichText(
+      text: TextSpan(
+        text:
+            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
+        style: GoogleFonts.inter(
+          color: Colors.white60,
+          fontSize: 11,
+        ),
+        children: [
+          TextSpan(
+            text: 'r/${widget.submissionData.subreddit.displayName}',
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () {
+                if (widget.isViewingPost) {
+                  Navigator.pop(context);
+                }
+                widget.onSubredditTap(
+                  widget.submissionData.subreddit.displayName,
+                );
+              },
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -21,21 +21,22 @@ Widget buildPullToRefresh(
       break;
     case RefreshIndicatorMode.drag:
       return Center(
-          child: Transform.rotate(
-        angle: pulledExtent / 10,
-        child: Container(
-          width: 45,
-          height: 45,
-          child: Icon(
-            EvaIcons.refresh,
-            size: 17,
-          ),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color(0xFF282828),
+        child: Transform.rotate(
+          angle: pulledExtent / 10,
+          child: Container(
+            width: 45,
+            height: 45,
+            child: Icon(
+              EvaIcons.refresh,
+              size: 17,
+            ),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF282828),
+            ),
           ),
         ),
-      ));
+      );
       break;
   }
 
