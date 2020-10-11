@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterreddit/postpage.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
+import 'package:flutterreddit/profilepage.dart';
+import 'package:flutterreddit/profilepage_viewmodel.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterreddit/common/config.dart';
@@ -49,12 +51,34 @@ abstract class MainPageViewModelBase with Store {
   bool hasLoadedAllAvailablePosts = false;
 
   void goToPostPage(
-      BuildContext context, Submission submission, Function(String) goTo) {
+    BuildContext context,
+    Submission submission,
+    Function(String) goToSubreddit,
+    Function(String) goToProfile,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => PostPage(
-          viewModel: PostPageViewModel(submission: submission, goTo: goTo),
+          viewModel: PostPageViewModel(
+            submission: submission,
+            goToSubreddit: goToSubreddit,
+            goToProfile: goToProfile,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void goToProfilePage(
+    BuildContext context,
+    String username,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => ProfilePage(
+          viewModel: ProfilePageViewModel(),
         ),
       ),
     );

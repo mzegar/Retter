@@ -12,7 +12,9 @@ import 'package:google_fonts/google_fonts.dart';
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;
 
-  const PostPage({@required this.viewModel});
+  const PostPage({
+    @required this.viewModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,13 @@ class PostPage extends StatelessWidget {
                   await launchURL(viewModel.submission.url.toString());
                 }
               },
-              onSubredditTap: viewModel.goTo,
+              onSubredditTap: viewModel.goToSubreddit,
+              onProfileTap: (String username) {
+                Navigator.pop(context);
+                viewModel.goToProfile(
+                  username,
+                );
+              },
             ),
             viewModel.loadingComments
                 ? buildLoadingPostIndicator('Loading comments...')

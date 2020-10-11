@@ -17,6 +17,7 @@ class SubredditPost extends StatefulWidget {
   final void Function() onTap;
   final void Function() onCommentTap;
   final void Function(String subreddit) onSubredditTap;
+  final void Function(String name) onProfileTap;
   final String selfText;
 
   const SubredditPost({
@@ -27,6 +28,7 @@ class SubredditPost extends StatefulWidget {
     this.onTap,
     this.onCommentTap,
     this.onSubredditTap,
+    this.onProfileTap,
     this.selfText,
   });
   @override
@@ -72,7 +74,8 @@ class _SubredditPostState extends State<SubredditPost> {
                         SizedBox(height: 4),
                         InkWell(
                           onTap: () {
-
+                            if (widget.onProfileTap != null)
+                              widget.onProfileTap(widget.submissionData.author);
                           },
                           child: Text(
                             'u/${widget.submissionData.author}',
@@ -83,6 +86,7 @@ class _SubredditPostState extends State<SubredditPost> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 4),
                         Row(
                           children: [
                             Text(
@@ -104,7 +108,7 @@ class _SubredditPostState extends State<SubredditPost> {
                               child: Text(
                                 'r/${widget.submissionData.subreddit.displayName}',
                                 style: GoogleFonts.inter(
-                                  color: Colors.blueGrey,
+                                  color: Colors.white60,
                                   fontSize: 11,
                                   decoration: TextDecoration.underline,
                                 ),

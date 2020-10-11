@@ -159,17 +159,35 @@ class MainPage extends StatelessWidget {
               onSubredditTap: (String enteredText) {
                 viewModel.changeToSubreddit(enteredText);
               },
+              onProfileTap: (String username) {
+                viewModel.goToProfilePage(
+                  context,
+                  username,
+                );
+              },
               onTap: () async {
                 if (submissionData.isSelf) {
                   viewModel.goToPostPage(
-                      context, submissionData, viewModel.changeToSubreddit);
+                    context,
+                    submissionData,
+                    viewModel.changeToSubreddit,
+                    (String username) {
+                      viewModel.goToProfilePage(context, username);
+                    },
+                  );
                 } else {
                   await launchURL(submissionData.url.toString());
                 }
               },
               onCommentTap: () {
                 viewModel.goToPostPage(
-                    context, submissionData, viewModel.changeToSubreddit);
+                  context,
+                  submissionData,
+                  viewModel.changeToSubreddit,
+                  (String username) {
+                    viewModel.goToProfilePage(context, username);
+                  },
+                );
               },
             );
           }),
