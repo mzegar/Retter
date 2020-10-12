@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterreddit/postpage.dart';
 import 'package:flutterreddit/postpage_viewmodel.dart';
+import 'package:flutterreddit/profilepage.dart';
+import 'package:flutterreddit/profilepage_viewmodel.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterreddit/common/config.dart';
@@ -14,7 +16,7 @@ class MainPageViewModel = MainPageViewModelBase with _$MainPageViewModel;
 abstract class MainPageViewModelBase with Store {
   final Config config;
   final ScrollController scrollController = ScrollController();
-  final String defaultSubredditString = 'all';
+  final String defaultSubredditString = 'All';
   final int _numberOfPostsToFetch = 25;
 
   MainPageViewModelBase({
@@ -48,18 +50,46 @@ abstract class MainPageViewModelBase with Store {
   @observable
   bool hasLoadedAllAvailablePosts = false;
 
-  void goToPostPage(BuildContext context, Submission submission) {
+  void goToPostPage(
+    BuildContext context,
+    Submission submission,
+    Function(String) goToSubreddit,
+    Function(String) goToProfile,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => PostPage(
-          viewModel: PostPageViewModel(submission: submission),
+          viewModel: PostPageViewModel(
+            submission: submission,
+            goToSubreddit: goToSubreddit,
+            goToProfile: goToProfile,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void goToProfilePage(
+    BuildContext context,
+    String username,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => ProfilePage(
+          viewModel: ProfilePageViewModel(),
         ),
       ),
     );
   }
 
   void changeToSubreddit(String subredditTextField) async {
+    if (currentSubreddit.displayName.toLowerCase() ==
+            subredditTextField.toLowerCase() &&
+        subredditTextField != defaultSubredditString) {
+      return;
+    }
     submissionContent.clear();
     currentSubreddit = reddit.subreddit(subredditTextField);
     hasLoadedAllAvailablePosts = false;
@@ -116,7 +146,7 @@ abstract class MainPageViewModelBase with Store {
   }
 
   SubredditRef _setDefaultSubreddit() {
-    return currentSubreddit = reddit.subreddit('all');
+    return currentSubreddit = reddit.subreddit('All');
   }
 
   Future<bool> _getPosts(SubredditRef subredditToFetchFrom) async {

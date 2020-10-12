@@ -1,5 +1,6 @@
 import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutterreddit/common/launchURL.dart';
@@ -15,6 +16,8 @@ class SubredditPost extends StatefulWidget {
   final bool isLoggedIn;
   final void Function() onTap;
   final void Function() onCommentTap;
+  final void Function(String subreddit) onSubredditTap;
+  final void Function(String name) onProfileTap;
   final String selfText;
 
   const SubredditPost({
@@ -24,6 +27,8 @@ class SubredditPost extends StatefulWidget {
     this.isLoggedIn,
     this.onTap,
     this.onCommentTap,
+    this.onSubredditTap,
+    this.onProfileTap,
     this.selfText,
   });
   @override
@@ -34,6 +39,11 @@ class _SubredditPostState extends State<SubredditPost> {
   VoteState voteStatus = VoteState.none;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     return Padding(
@@ -41,64 +51,119 @@ class _SubredditPostState extends State<SubredditPost> {
       child: Card(
         margin: EdgeInsets.zero,
         color: Color(0xFF282828),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.submissionData.title,
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                            ),
+        child: InkWell(
+          onTap: () {
+            if (widget.onTap != null) widget.onTap();
+          },
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.submissionData.title,
+                          style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w400,
                           ),
-                          Text(
-                            widget.submissionData.author,
+                        ),
+                        SizedBox(height: 4),
+                        InkWell(
+                          onTap: () {
+                            if (widget.onProfileTap != null)
+                              widget.onProfileTap(widget.submissionData.author);
+                          },
+                          child: Text(
+                            'u/${widget.submissionData.author}',
                             style: GoogleFonts.inter(
                               color: Colors.blueGrey,
                               fontSize: 11,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
-                          Text(
-                            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ${widget.submissionData.subreddit.displayName}',
-                            style: GoogleFonts.inter(
-                              color: Colors.white60,
-                              fontSize: 11,
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
+                              style: GoogleFonts.inter(
+                                color: Colors.white60,
+                                fontSize: 11,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    widget.submissionData.isSelf || widget.isViewingPost
-                        ? Container()
-                        : _buildPostThumbnail(
-                            widget.submissionData.preview, screenWidth),
-                    if (widget.selfText != null && widget.selfText.isNotEmpty)
-                      _buildSelfText(),
-                  ],
-                ),
-                Positioned.fill(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        if (widget.onTap != null) widget.onTap();
-                      },
+                            InkWell(
+                              onTap: () {
+                                if (widget.isViewingPost) {
+                                  Navigator.pop(context);
+                                }
+                                widget.onSubredditTap(
+                                  widget.submissionData.subreddit.displayName,
+                                );
+                              },
+                              child: Text(
+                                'r/${widget.submissionData.subreddit.displayName}',
+                                style: GoogleFonts.inter(
+                                  color: Colors.white60,
+                                  fontSize: 11,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-            _buildBottomBar(),
-          ],
+                  widget.submissionData.isSelf || widget.isViewingPost
+                      ? Container()
+                      : _buildPostThumbnail(
+                          widget.submissionData.preview,
+                          screenWidth,
+                        ),
+                  if (widget.selfText != null && widget.selfText.isNotEmpty)
+                    _buildSelfText(),
+                ],
+              ),
+              _buildBottomBar(),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _backup() {
+    return RichText(
+      text: TextSpan(
+        text:
+            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
+        style: GoogleFonts.inter(
+          color: Colors.white60,
+          fontSize: 11,
+        ),
+        children: [
+          TextSpan(
+            text: 'r/${widget.submissionData.subreddit.displayName}',
+            recognizer: new TapGestureRecognizer()
+              ..onTap = () {
+                if (widget.isViewingPost) {
+                  Navigator.pop(context);
+                }
+                widget.onSubredditTap(
+                  widget.submissionData.subreddit.displayName,
+                );
+              },
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -178,31 +243,38 @@ class _SubredditPostState extends State<SubredditPost> {
   }
 
   Widget _buildSelfText() {
-    return Padding(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: EdgeInsets.all(10),
-      child: MarkdownBody(
-        styleSheet: MarkdownStyleSheet(
-          p: GoogleFonts.inter(
-            fontSize: 13,
+      child: IntrinsicHeight(
+        child: MarkdownBody(
+          styleSheet: MarkdownStyleSheet(
+            p: GoogleFonts.inter(
+              fontSize: 13,
+            ),
+            h1: GoogleFonts.inter(
+              fontSize: 16,
+            ),
+            h2: GoogleFonts.inter(
+              fontSize: 19,
+            ),
+            h3: GoogleFonts.inter(
+              fontSize: 22,
+            ),
+            tableHead: TextStyle(fontWeight: FontWeight.bold),
+            tableBody: GoogleFonts.ptMono(),
+            tableColumnWidth: IntrinsicColumnWidth(),
           ),
-          h1: GoogleFonts.inter(
-            fontSize: 16,
-          ),
-          h2: GoogleFonts.inter(
-            fontSize: 19,
-          ),
-          h3: GoogleFonts.inter(
-            fontSize: 22,
-          ),
+          data: widget.submissionData.selftext,
+          extensionSet:
+              md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
+            md.EmojiSyntax(),
+            ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+          ]),
+          onTapLink: (String url) async {
+            await launchURL(url);
+          },
         ),
-        data: widget.submissionData.selftext,
-        extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubWeb.blockSyntaxes, [
-          md.EmojiSyntax(),
-          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-        ]),
-        onTapLink: (String url) async {
-          await launchURL(url);
-        },
       ),
     );
   }
