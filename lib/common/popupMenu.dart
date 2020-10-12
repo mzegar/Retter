@@ -5,8 +5,8 @@ enum popupMenuOptions { Login, Logout }
 
 class CustomPopupMenu extends StatelessWidget {
   final void Function(popupMenuOptions optionSelected) onTap;
-  bool isLoggedIn = false;
-  List<popupMenuOptions> _options = [];
+  final bool isLoggedIn;
+  final List<popupMenuOptions> _options = [];
 
   CustomPopupMenu({
     this.onTap,

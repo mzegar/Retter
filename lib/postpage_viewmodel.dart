@@ -27,6 +27,8 @@ abstract class PageCommentModelBase with Store {
 
 abstract class PostPageViewModelBase with Store {
   final Submission submission;
+  final Function(String) goToSubreddit;
+  final Function(String) goToProfile;
 
   @observable
   bool loadingComments = false;
@@ -36,6 +38,8 @@ abstract class PostPageViewModelBase with Store {
 
   PostPageViewModelBase({
     @required this.submission,
+    @required this.goToSubreddit,
+    @required this.goToProfile,
   }) {
     getComments();
   }

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'package:draw/draw.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutterreddit/common/loadingPostIndicator.dart';
-import 'package:flutterreddit/common/popupDialog.dart';
 import 'package:flutterreddit/common/popupMenu.dart';
 import 'package:flutterreddit/common/config.dart';
+import 'package:flutterreddit/common/pullToRefresh.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +15,8 @@ import 'package:flutterreddit/mainpage_viewmodel.dart';
 import 'package:flutterreddit/common/subredditPost.dart';
 import 'package:flutterreddit/drawer.dart';
 import 'package:flutterreddit/common/launchURL.dart';
+
+import 'common/popupDialog.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ Future<void> main() async {
       brightness: Brightness.dark,
       primaryColor: Color(0xFF030303),
       accentColor: Colors.blueAccent,
+      splashColor: Colors.blueGrey,
     ),
     home: MainPage(
       viewModel: MainPageViewModel(
@@ -80,9 +82,7 @@ class MainPage extends StatelessWidget {
   Widget _buildTitle() {
     return Observer(builder: (_) {
       return Text(
-        viewModel.currentSubreddit != null
-            ? viewModel.currentSubreddit.displayName
-            : viewModel.defaultSubredditString,
+        'r/${viewModel.currentSubreddit != null ? viewModel.currentSubreddit.displayName : viewModel.defaultSubredditString}',
         style: GoogleFonts.inter(),
       );
     });
@@ -124,42 +124,33 @@ class MainPage extends StatelessWidget {
             double refreshTriggerPullDistance,
             double refreshIndicatorExtent,
           ) {
-            if (pulledExtent < 15) {
-              return Container();
-            }
-            switch (refreshState) {
-              case RefreshIndicatorMode.inactive:
-              case RefreshIndicatorMode.done:
-              case RefreshIndicatorMode.armed:
-              case RefreshIndicatorMode.refresh:
-                return Container();
-                break;
-              case RefreshIndicatorMode.drag:
-                return Icon(
-                  EvaIcons.arrowIosUpwardOutline,
-                  size: pulledExtent * 0.5,
-                );
-                break;
-            }
-
-            return Container();
+            return buildPullToRefresh(
+              context,
+              refreshState,
+              pulledExtent,
+              refreshTriggerPullDistance,
+              refreshIndicatorExtent,
+            );
           },
           onRefresh: () async {
             viewModel.refreshPosts();
           },
         ),
-        if (viewModel.loadedPostSuccessfully) _buildPosts(context: context),
+        if (viewModel.loadedPostSuccessfully) _buildPosts(context),
       ],
     );
   }
 
-  Widget _buildPosts({BuildContext context}) {
+  Widget _buildPosts(BuildContext context) {
     return Observer(builder: (_) {
       return SliverList(
         delegate: SliverChildListDelegate(
           List.generate(viewModel.submissionContent.length + 1, (index) {
-            if (index == viewModel.submissionContent.length) {
+            var isLastIndex = index == viewModel.submissionContent.length;
+            if (isLastIndex && !viewModel.hasLoadedAllAvailablePosts) {
               return buildLoadingPostIndicator('Loading posts...');
+            } else if (isLastIndex && viewModel.hasLoadedAllAvailablePosts) {
+              return Container();
             }
 
             var submissionData = viewModel.submissionContent.elementAt(index);
@@ -168,15 +159,38 @@ class MainPage extends StatelessWidget {
               submissionData: submissionData,
               isViewingPost: false,
               isLoggedIn: viewModel?.redditor != null,
+              onSubredditTap: (String enteredText) {
+                viewModel.changeToSubreddit(enteredText);
+              },
+              onProfileTap: (String username) {
+                viewModel.goToProfilePage(
+                  context,
+                  username,
+                );
+              },
               onTap: () async {
                 if (submissionData.isSelf) {
-                  viewModel.goToPostPage(context, submissionData);
+                  viewModel.goToPostPage(
+                    context,
+                    submissionData,
+                    viewModel.changeToSubreddit,
+                    (String username) {
+                      viewModel.goToProfilePage(context, username);
+                    },
+                  );
                 } else {
                   await launchURL(submissionData.url.toString());
                 }
               },
               onCommentTap: () {
-                viewModel.goToPostPage(context, submissionData);
+                viewModel.goToPostPage(
+                  context,
+                  submissionData,
+                  viewModel.changeToSubreddit,
+                  (String username) {
+                    viewModel.goToProfilePage(context, username);
+                  },
+                );
               },
               onLongPress: () {
                 _copyUrl(submissionData, context);

@@ -12,7 +12,9 @@ import 'package:google_fonts/google_fonts.dart';
 class PostPage extends StatelessWidget {
   final PostPageViewModel viewModel;
 
-  const PostPage({@required this.viewModel});
+  const PostPage({
+    @required this.viewModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +30,6 @@ class PostPage extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          title: Align(
-            alignment: Alignment.center,
-            child: Text(
-              viewModel.submission.title,
-              style: GoogleFonts.inter(),
-            ),
-          ),
         ),
         body: ListView(
           children: <Widget>[
@@ -48,6 +43,13 @@ class PostPage extends StatelessWidget {
                 if (!viewModel.submission.isSelf) {
                   await launchURL(viewModel.submission.url.toString());
                 }
+              },
+              onSubredditTap: viewModel.goToSubreddit,
+              onProfileTap: (String username) {
+                Navigator.pop(context);
+                viewModel.goToProfile(
+                  username,
+                );
               },
             ),
             viewModel.loadingComments
