@@ -10,7 +10,7 @@ https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
 ## Screenshots
 
-<img src="/screenshots/img4.jpg" width="275"> <img src="/screenshots/img5.jpg" width="275">
+<img src="/screenshots/img1.png" width="275"> <img src="/screenshots/img2.png" width="275">
 
 ## Building from source
 
@@ -27,6 +27,6 @@ Pages are setup using [Mobx](https://pub.dev/packages/mobx) and a viewmodel patt
 
 https://github.com/mzegar/Retter/issues
 
-## Video showcase
+## Video showcase (Old version)
 
 [<img src="/screenshots/Video thumbnail.jpg" width="275">](https://www.youtube.com/watch?v=a_tQ7w4Oda0) 
