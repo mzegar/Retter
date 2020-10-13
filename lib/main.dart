@@ -160,10 +160,11 @@ class MainPage extends StatelessWidget {
                 viewModel.changeToSubreddit(enteredText);
               },
               onProfileTap: (String username) {
-                viewModel.goToProfilePage(
-                  context,
-                  username,
-                );
+                // TODO: Setup profile page
+                // viewModel.goToProfilePage(
+                //   context,
+                //   username,
+                // );
               },
               onTap: () async {
                 if (submissionData.isSelf) {
@@ -172,7 +173,8 @@ class MainPage extends StatelessWidget {
                     submissionData,
                     viewModel.changeToSubreddit,
                     (String username) {
-                      viewModel.goToProfilePage(context, username);
+                      // TODO: setup profile page
+                      // viewModel.goToProfilePage(context, username);
                     },
                   );
                 } else {
@@ -185,7 +187,8 @@ class MainPage extends StatelessWidget {
                   submissionData,
                   viewModel.changeToSubreddit,
                   (String username) {
-                    viewModel.goToProfilePage(context, username);
+                    // TODO: go to profile page
+                    // viewModel.goToProfilePage(context, username);
                   },
                 );
               },
