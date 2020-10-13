@@ -19,6 +19,7 @@ class SubredditPost extends StatefulWidget {
   final void Function(String subreddit) onSubredditTap;
   final void Function(String name) onProfileTap;
   final String selfText;
+  final void Function() onLongPress;
 
   const SubredditPost({
     this.context,
@@ -30,6 +31,7 @@ class SubredditPost extends StatefulWidget {
     this.onSubredditTap,
     this.onProfileTap,
     this.selfText,
+    this.onLongPress,
   });
   @override
   _SubredditPostState createState() => _SubredditPostState();
@@ -54,6 +56,9 @@ class _SubredditPostState extends State<SubredditPost> {
         child: InkWell(
           onTap: () {
             if (widget.onTap != null) widget.onTap();
+          },
+          onLongPress: () {
+            if (widget.onLongPress != null) widget.onLongPress();
           },
           child: Column(
             children: [
