@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:draw/draw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +14,6 @@ import 'package:flutterreddit/mainpage_viewmodel.dart';
 import 'package:flutterreddit/common/subredditPost.dart';
 import 'package:flutterreddit/drawer.dart';
 import 'package:flutterreddit/common/launchURL.dart';
-
-import 'common/popupDialog.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -192,32 +189,10 @@ class MainPage extends StatelessWidget {
                   },
                 );
               },
-              onLongPress: () {
-                _copyUrl(submissionData, context);
-              },
             );
           }),
         ),
       );
     });
-  }
-
-  void _copyUrl(Submission submissionData, BuildContext context) {
-    Clipboard.setData(ClipboardData(text: submissionData.url.toString()));
-    _notifyUser(context);
-  }
-
-  void _notifyUser(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          Future.delayed(
-            Duration(seconds: 1),
-            () {
-              Navigator.of(context).pop(true);
-            },
-          );
-          return PopupDialog(text: "Url copied to clipboard");
-        });
   }
 }

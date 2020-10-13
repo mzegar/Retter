@@ -1,20 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PopupDialog extends StatelessWidget {
-  const PopupDialog({Key key, this.text}) : super(key: key);
+  final String dialogMessage;
 
-  final String text;
+  const PopupDialog({
+    Key key,
+    this.dialogMessage,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40),
-      ),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      title: Text(text),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        AlertDialog(
+          backgroundColor: Color(0xFF282828),
+          content: Text(
+            dialogMessage,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(),
+          ),
+        ),
+      ],
     );
   }
+}
+
+Future<void> showPopupDialog({
+  BuildContext context,
+  String dialogMessage,
+}) async {
+  return await showDialog(
+      context: context,
+      barrierColor: Colors.white.withOpacity(0),
+      builder: (_) {
+        Future.delayed(
+          Duration(seconds: 1),
+          () {
+            Navigator.of(context).pop(true);
+          },
+        );
+        return PopupDialog(
+          dialogMessage: dialogMessage,
+        );
+      });
 }

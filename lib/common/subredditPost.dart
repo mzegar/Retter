@@ -1,9 +1,10 @@
 import 'package:draw/draw.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutterreddit/common/launchURL.dart';
+import 'package:flutterreddit/common/popupDialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -19,7 +20,6 @@ class SubredditPost extends StatefulWidget {
   final void Function(String subreddit) onSubredditTap;
   final void Function(String name) onProfileTap;
   final String selfText;
-  final void Function() onLongPress;
 
   const SubredditPost({
     this.context,
@@ -31,7 +31,6 @@ class SubredditPost extends StatefulWidget {
     this.onSubredditTap,
     this.onProfileTap,
     this.selfText,
-    this.onLongPress,
   });
   @override
   _SubredditPostState createState() => _SubredditPostState();
@@ -56,9 +55,6 @@ class _SubredditPostState extends State<SubredditPost> {
         child: InkWell(
           onTap: () {
             if (widget.onTap != null) widget.onTap();
-          },
-          onLongPress: () {
-            if (widget.onLongPress != null) widget.onLongPress();
           },
           child: Column(
             children: [
@@ -135,40 +131,10 @@ class _SubredditPostState extends State<SubredditPost> {
                     _buildSelfText(),
                 ],
               ),
-              _buildBottomBar(),
+              _buildBottomBar(context),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _backup() {
-    return RichText(
-      text: TextSpan(
-        text:
-            '${NumberFormat.compact().format(widget.submissionData.upvotes + (voteStatus == VoteState.upvoted ? 1 : 0) + (voteStatus == VoteState.downvoted ? -1 : 0))} upvotes  •  ${widget.submissionData.numComments.toString()} comments  •  ',
-        style: GoogleFonts.inter(
-          color: Colors.white60,
-          fontSize: 11,
-        ),
-        children: [
-          TextSpan(
-            text: 'r/${widget.submissionData.subreddit.displayName}',
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () {
-                if (widget.isViewingPost) {
-                  Navigator.pop(context);
-                }
-                widget.onSubredditTap(
-                  widget.submissionData.subreddit.displayName,
-                );
-              },
-            style: TextStyle(
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -187,7 +153,13 @@ class _SubredditPostState extends State<SubredditPost> {
     });
   }
 
-  Widget _buildBottomBar() {
+  Future<void> _copyPostUrl(BuildContext context) async {
+    Clipboard.setData(
+        ClipboardData(text: widget.submissionData.url.toString()));
+    await showPopupDialog(context: context, dialogMessage: 'Copied Link');
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -226,6 +198,12 @@ class _SubredditPostState extends State<SubredditPost> {
               _downVote();
             },
           ),
+        IconButton(
+          icon: Icon(Icons.content_copy),
+          onPressed: () {
+            _copyPostUrl(context);
+          },
+        ),
       ],
     );
   }
