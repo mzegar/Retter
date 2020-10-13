@@ -16,7 +16,7 @@ class PopupDialog extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         AlertDialog(
-          backgroundColor: Color(0xFF282828),
+          backgroundColor: Color(0xFF121212),
           content: Text(
             dialogMessage,
             textAlign: TextAlign.center,
@@ -35,11 +35,12 @@ Future<void> showPopupDialog({
   return await showDialog(
       context: context,
       barrierColor: Colors.white.withOpacity(0),
+      barrierDismissible: false,
       builder: (_) {
         Future.delayed(
-          Duration(seconds: 1),
+          Duration(milliseconds: 750),
           () {
-            Navigator.of(context).pop(true);
+            Navigator.of(context).pop();
           },
         );
         return PopupDialog(
