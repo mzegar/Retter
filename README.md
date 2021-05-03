@@ -4,7 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/mzegar/retter?style=social)](https://github.com/mzegar/retter/stargazers)
 
 
-IOS/Android Reddit app created with Flutter
+iOS/Android Reddit app created with Flutter
 
 https://play.google.com/store/apps/details?id=com.mzegar.flutterreddit
 
